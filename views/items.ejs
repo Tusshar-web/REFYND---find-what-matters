@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items List</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .item-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        .item-card h3 { margin-top: 0; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <form id="searchForm">
+        <input
+            type="text"
+            id="searchInput"
+            name="keyword"
+            placeholder="Search items"
+        >
+        <button type="submit">
+            Search
+        </button>
+    </form>
+    <h1>All Items</h1>
+    <a href="/add-item">Add New Item</a>
+    <hr>
+    <div id="itemsContainer">Loading items...</div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const keyword = document.getElementById('searchInput').value;
+            fetchItems(keyword);
+        });
+
+        async function fetchItems(keyword = '') {
+            try {
+                const url = keyword ? '/search?keyword=' + encodeURIComponent(keyword) : '/items';
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                const container = document.getElementById('itemsContainer');
+                
+                if (response.ok && result.items) {
+                    if (result.items.length === 0) {
+                        container.innerHTML = '<p>No items found.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = result.items.map(item => `
+                        <div class="item-card">
+                            ${item.image_url ? `<img src="/uploads/${item.image_url}" alt="${item.item_name}" style="max-width: 200px; max-height: 200px; display: block; margin-bottom: 10px; border-radius: 4px;">` : ''}
+                            <h3>${item.item_name}</h3>
+                            <p><strong>Type:</strong> ${item.item_type}</p>
+                            <p><strong>Category:</strong> ${item.category}</p>
+                            <p><strong>Description:</strong> ${item.description}</p>
+                            <a href="/item-page/${item.item_id}" style="display: inline-block; margin-top: 10px; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px;">View Details</a>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `<p class="error">${result.message || 'Failed to load items.'}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('itemsContainer').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+
+        fetchItems();
+    </script>
+</body>
+</html>

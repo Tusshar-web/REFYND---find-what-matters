@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Detail</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .detail-card { border: 1px solid #ccc; padding: 20px; border-radius: 5px; max-width: 600px; }
+        .detail-card img { max-width: 100%; border-radius: 5px; margin-bottom: 20px; }
+        .error { color: red; }
+        a.back-link { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff; }
+    </style>
+</head>
+<body>
+    <a href="/items-page" class="back-link">&larr; Back to Items</a>
+    <div id="itemDetailContainer">Loading item details...</div>
+
+    <script>
+        const itemId = "<%= itemId %>";
+
+        async function fetchItemDetail() {
+            try {
+                const response = await fetch('/items/' + itemId);
+                const item = await response.json();
+                
+                const container = document.getElementById('itemDetailContainer');
+                
+                if (response.ok && item) {
+                    container.innerHTML = `
+                        <div class="detail-card">
+                            ${item.image_url ? `<img src="/uploads/${item.image_url}" alt="${item.item_name}">` : ''}
+                            <h2>${item.item_name}</h2>
+                            <p><strong>Type:</strong> ${item.item_type}</p>
+                            <p><strong>Category:</strong> ${item.category}</p>
+                            <p><strong>Description:</strong> ${item.description}</p>
+                            <p><small>User ID: ${item.user_id}</small></p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `<p class="error">${item.message || 'Failed to load item details.'}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('itemDetailContainer').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+
+        fetchItemDetail();
+    </script>
+</body>
+</html>

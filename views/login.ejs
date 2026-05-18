@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login Page</h1>
+
+    <form id="loginForm">
+        <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter Email"
+            required
+        >
+        <br><br>
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter Password"
+            required
+        >
+        <br><br>
+        <button type="submit">
+            Login
+        </button>
+    </form>
+    <form action="/items-page" method="GET">
+        <button type ="submit">
+            Go to home page
+        </button>
+    </form>
+    
+    <div id="message" style="margin-top: 15px; font-weight: bold;"></div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                // The server might return plain text for errors or JSON for success
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    const result = await response.json();
+                    
+                    if (response.ok && result.token) {
+                        localStorage.setItem('token', result.token);
+                        document.getElementById('message').innerText = 'Login successful! Token saved to localStorage.';
+                        document.getElementById('message').style.color = 'green';
+                        
+                        // Optional: redirect to add-item if you have a route for it
+                        // window.location.href = '/add-item'; 
+                    } else {
+                        document.getElementById('message').innerText = result.message || 'Login failed.';
+                        document.getElementById('message').style.color = 'red';
+                    }
+                } else {
+                    const textResult = await response.text();
+                    document.getElementById('message').innerText = textResult || 'Login failed.';
+                    document.getElementById('message').style.color = 'red';
+                }
+            } catch (error) {
+                document.getElementById('message').innerText = 'Error: ' + error.message;
+                document.getElementById('message').style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>
