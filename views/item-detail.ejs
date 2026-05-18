@@ -3,43 +3,511 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Detail</title>
-    <link rel="stylesheet" href="item-detail.css">
+    <title>Document</title>
 </head>
 <body>
-    <a href="/items-page" class="back-link">&larr; Back to Items</a>
-    <div id="itemDetailContainer">Loading item details...</div>
+    <a
+        href="/items-page"
+        class="back-link"
+    >
+        &larr; Back to Items
+    </a>
+
+    <div id="itemDetailContainer">
+        Loading item details...
+    </div>
+
+
+    <!-- CLAIM MODAL -->
+
+    <div
+
+        id="claimModal"
+
+        class="modal"
+
+        style="
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.5);
+            z-index:1000;
+            align-items:center;
+            justify-content:center;
+        "
+    >
+
+        <div
+
+            class="modal-content"
+
+            style="
+                background:white;
+                width:90%;
+                max-width:500px;
+                padding:20px;
+                border-radius:8px;
+                position:relative;
+            "
+        >
+
+            <span
+
+                class="close"
+
+                style="
+                    position:absolute;
+                    top:15px;
+                    right:20px;
+                    cursor:pointer;
+                    font-size:24px;
+                    font-weight:bold;
+                "
+            >
+                &times;
+            </span>
+
+            <h2>
+                Claim Item
+            </h2>
+
+            <form id="claimForm">
+
+                <!-- PROOF MESSAGE -->
+
+                <div style="margin-bottom:15px;">
+
+                    <label
+                        for="proof"
+                        style="
+                            display:block;
+                            margin-bottom:5px;
+                            font-weight:bold;
+                        "
+                    >
+
+                        Why does this item belong to you?
+
+                    </label>
+
+                    <textarea
+
+                        id="proof"
+
+                        rows="4"
+
+                        style="
+                            width:100%;
+                            padding:10px;
+                            border:1px solid #ccc;
+                            border-radius:4px;
+                            box-sizing:border-box;
+                        "
+
+                        placeholder="
+                            Explain why this item belongs to you
+                        "
+
+                        required
+
+                    ></textarea>
+
+                </div>
+
+
+                <!-- IDENTIFYING FEATURE -->
+
+                <div style="margin-bottom:20px;">
+
+                    <label
+                        for="identifyingFeature"
+
+                        style="
+                            display:block;
+                            margin-bottom:5px;
+                            font-weight:bold;
+                        "
+                    >
+
+                        Unique Identifying Feature
+
+                    </label>
+
+                    <textarea
+
+                        id="identifyingFeature"
+
+                        rows="3"
+
+                        style="
+                            width:100%;
+                            padding:10px;
+                            border:1px solid #ccc;
+                            border-radius:4px;
+                            box-sizing:border-box;
+                        "
+
+                        placeholder="
+                            Example:
+                            scratch mark,
+                            college ID,
+                            custom sticker...
+                        "
+
+                        required
+
+                    ></textarea>
+
+                </div>
+
+
+                <!-- SUBMIT BUTTON -->
+
+                <button
+
+                    type="submit"
+
+                    style="
+                        background:#28a745;
+                        color:white;
+                        border:none;
+                        padding:12px;
+                        width:100%;
+                        border-radius:4px;
+                        cursor:pointer;
+                        font-size:16px;
+                    "
+                >
+
+                    Submit Claim
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
 
     <script>
+
         const itemId = "<%= itemId %>";
 
+
         async function fetchItemDetail() {
+
             try {
-                const response = await fetch('/items/' + itemId);
-                const item = await response.json();
-                
-                const container = document.getElementById('itemDetailContainer');
-                
-                if (response.ok && item) {
+
+                const response =
+                await fetch(
+                    '/items/' + itemId
+                );
+
+                const item =
+                await response.json();
+
+                const container =
+                document.getElementById(
+                    'itemDetailContainer'
+                );
+
+                if (
+                    response.ok &&
+                    item
+                ) {
+
                     container.innerHTML = `
+
                         <div class="detail-card">
-                            ${item.image_url ? `<img src="/uploads/${item.image_url}" alt="${item.item_name}">` : ''}
-                            <h2>${item.item_name}</h2>
-                            <p><strong>Type:</strong> ${item.item_type}</p>
-                            <p><strong>Category:</strong> ${item.category}</p>
-                            <p><strong>Description:</strong> ${item.description}</p>
-                            <p><small>User ID: ${item.user_id}</small></p>
+
+                            ${item.image_url
+
+                            ?
+
+                            `<img
+                                src="/uploads/${item.image_url}"
+                                alt="${item.item_name}"
+                            >`
+
+                            : ''}
+
+                            <h2>
+                                ${item.item_name}
+                            </h2>
+
+                            <p>
+                                <strong>Type:</strong>
+                                ${item.item_type}
+                            </p>
+
+                            <p>
+                                <strong>Category:</strong>
+                                ${item.category}
+                            </p>
+
+                            <p>
+                                <strong>Description:</strong>
+                                ${item.description}
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+                                ${item.status}
+                            </p>
+
+                            <p>
+                                <small>
+                                    User ID:
+                                    ${item.user_id}
+                                </small>
+                            </p>
+
+
+                            ${item.status !== 'resolved'
+
+                            ?
+
+                            `<button
+
+                                id="claimBtn"
+
+                                style="
+                                    margin-top:15px;
+                                    background:#007bff;
+                                    color:white;
+                                    border:none;
+                                    padding:10px 15px;
+                                    border-radius:4px;
+                                    cursor:pointer;
+                                "
+                            >
+
+                                Claim This Item
+
+                            </button>`
+
+                            :
+
+                            `<p
+                                style="
+                                    color:red;
+                                    font-weight:bold;
+                                "
+                            >
+
+                                This item has already been resolved.
+
+                            </p>`
+                            }
+
                         </div>
                     `;
+
+
+                    // OPEN MODAL
+
+                    const claimBtn =
+                    document.getElementById(
+                        'claimBtn'
+                    );
+
+                    if (claimBtn) {
+
+                        claimBtn.addEventListener(
+
+                            'click',
+
+                            () => {
+
+                                document
+                                .getElementById(
+                                    'claimModal'
+                                )
+                                .style.display = 'flex';
+                            }
+                        );
+                    }
+
                 } else {
-                    container.innerHTML = `<p class="error">${item.message || 'Failed to load item details.'}</p>`;
+
+                    container.innerHTML = `
+
+                        <p class="error">
+
+                            ${item.message ||
+                            'Failed to load item details.'}
+
+                        </p>
+                    `;
                 }
+
             } catch (error) {
-                document.getElementById('itemDetailContainer').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+
+                document
+                .getElementById(
+                    'itemDetailContainer'
+                )
+                .innerHTML = `
+
+                    <p class="error">
+
+                        Error:
+                        ${error.message}
+
+                    </p>
+                `;
             }
         }
 
+
+
+        // CLOSE MODAL
+
+        document
+        .querySelector('.close')
+        .addEventListener(
+
+            'click',
+
+            () => {
+
+                document
+                .getElementById(
+                    'claimModal'
+                )
+                .style.display = 'none';
+            }
+        );
+
+
+
+        // CLOSE WHEN CLICK OUTSIDE
+
+        window.onclick = function(event) {
+
+            const modal =
+            document.getElementById(
+                'claimModal'
+            );
+
+            if (
+                event.target == modal
+            ) {
+
+                modal.style.display =
+                'none';
+            }
+        };
+
+
+
+        // SUBMIT CLAIM
+
+        document
+        .getElementById(
+            'claimForm'
+        )
+        .addEventListener(
+
+            'submit',
+
+            async (e) => {
+
+                e.preventDefault();
+
+                const proof_message =
+                document.getElementById(
+                    'proof'
+                ).value;
+
+                const identifying_feature =
+                document.getElementById(
+                    'identifyingFeature'
+                ).value;
+
+
+                try {
+
+                    const token =
+                    localStorage.getItem(
+                        'token'
+                    );
+
+                    const response =
+                    await fetch(
+
+                        '/claim',
+
+                        {
+
+                            method: 'POST',
+
+                            headers: {
+
+                                'Content-Type':
+                                'application/json',
+
+                                Authorization:
+                                `Bearer ${token}`
+                            },
+
+                            body: JSON.stringify({
+                                item_id: itemId,
+
+                                proof_description:proof_message,
+
+                                identifying_feature
+                            })
+                        }
+                    );
+
+                    const data =
+                    await response.json();
+
+                    if (response.ok) {
+
+                        alert(
+                            'Claim submitted successfully!'
+                        );
+
+                        document
+                        .getElementById(
+                            'claimForm'
+                        )
+                        .reset();
+
+                        document
+                        .getElementById(
+                            'claimModal'
+                        )
+                        .style.display = 'none';
+
+                    } else {
+
+                        alert(
+                            data.message ||
+                            'Failed to submit claim'
+                        );
+                    }
+
+                } catch (error) {
+
+                    alert(
+                        'Error: ' +
+                        error.message
+                    );
+                }
+            }
+        );
+
+
         fetchItemDetail();
+
     </script>
 </body>
 </html>

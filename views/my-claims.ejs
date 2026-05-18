@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Claims</title>
+</head>
+<body>
+    <a href="/items-page">&larr; Back to Items</a>
+    <h1>My Claims</h1>
+    <div id="claimsContainer">Loading claims...</div>
+
+    <script>
+        async function fetchMyClaims() {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch('/my-claims', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+                const container = document.getElementById('claimsContainer');
+
+                if (response.ok && data.claims.length > 0) {
+                    container.innerHTML = data.claims.map(claim => `
+                        <div style="border:1px solid #ccc; padding:15px; margin:10px 0; border-radius:8px;">
+                            <p><strong>Claim ID:</strong> ${claim.claim_id}</p>
+                            <p><strong>Item ID:</strong> ${claim.item_id}</p>
+                            <p><strong>Proof:</strong> ${claim.proof_description}</p>
+                            <p><strong>Identifying Feature:</strong> ${claim.identifying_feature}</p>
+                            <p><strong>Status:</strong> 
+                                <span style="color: ${
+                                    claim.claim_status === 'approved' ? 'green' : 
+                                    claim.claim_status === 'rejected' ? 'red' : 'orange'
+                                }">
+                                    ${claim.claim_status}
+                                </span>
+                            </p>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>You have not made any claims yet.</p>';
+                }
+
+            } catch (error) {
+                document.getElementById('claimsContainer').innerHTML = 
+                    `<p style="color:red">Error: ${error.message}</p>`;
+            }
+        }
+
+        fetchMyClaims();
+    </script>
+</body>
+</html>

@@ -6,9 +6,10 @@ const createClaim = (data,callback)=> {
         item_id,
         claimant_id,
         proof_description,
-        claim_status
+        claim_status,
+        identifying_feature
     )
-    VALUES(?,?,?,?)
+    VALUES(?,?,?,?,?)
     `;
     
     db.query(
@@ -17,12 +18,23 @@ const createClaim = (data,callback)=> {
             data.item_id,
             data.claimant_id,
             data.proof_description,
-            'pending'
+            'pending',
+            data.identifying_feature
         ], 
         callback
     )
 }
 
-module.exports = {
-    createClaim
-};
+const getAllClaims = (callback)=> {
+    const sql = `SELECT * FROM Claims`;
+    db.query(sql, callback);
+}
+
+// ✅ Add this to claimModel.js
+const getClaimsByUser = (user_id, callback) => {
+    const sql = `SELECT * FROM Claims WHERE claimant_id = ?`;
+    db.query(sql, [user_id], callback);
+}
+
+module.exports = { createClaim, getAllClaims, getClaimsByUser };
+

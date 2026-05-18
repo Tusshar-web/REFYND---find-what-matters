@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Report Lost Item</h1>
+
+    <form id="addItemForm" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="item_type" id="item_type" value="lost" />
+
+      <input
+        type="text"
+        name="item_name"
+        id="item_name"
+        placeholder="Item Name"
+        required
+      />
+
+      <br /><br />
+
+      <input
+        type="text"
+        id="category"
+        name="category"
+        placeholder="Category"
+        required
+      />
+
+      <br /><br />
+
+      <textarea
+        name="description"
+        id="description"
+        placeholder="Describe your lost item"
+        required
+      ></textarea>
+
+      <br /><br />
+
+      <input type="file" name="image" id="image" required />
+
+      <br /><br />
+
+      <button type="submit">Report Lost Item</button>
+    </form>
+    <script>
+      document
+        .getElementById("addItemForm")
+
+        .addEventListener(
+          "submit",
+
+          async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+
+            formData.append(
+              "item_name",
+
+              document.getElementById("item_name").value,
+            );
+
+            formData.append(
+              "item_type",
+
+              document.getElementById("item_type").value,
+            );
+
+            formData.append(
+              "category",
+
+              document.getElementById("category").value,
+            );
+
+            formData.append(
+              "description",
+
+              document.getElementById("description").value,
+            );
+
+            formData.append(
+              "image",
+
+              document.getElementById("image").files[0],
+            );
+
+            try {
+              const token = localStorage.getItem("token");
+                if (!token) {
+                    alert('You are not logged in');
+                    return;
+                }
+              const response = await fetch(
+                "/add-item",
+
+                {
+                  method: "POST",
+
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+
+                  body: formData,
+                },
+              );
+
+              const data = await response.json();
+
+              if (response.ok) {
+                alert("Item Added Successfully");
+              } else {
+                alert(data.message);
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          },
+        );
+    </script>
+  </body>
+</html>

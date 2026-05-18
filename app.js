@@ -3,7 +3,6 @@ require('dotenv').config({path: path.resolve(__dirname, './utils/.env')})
 const express = require('express');
 const app = express();
 const mySql = require('mysql2');
-const userRouter = require('./routes/userRoutes');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const db = require('./utils/db');
@@ -16,10 +15,19 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Serve static files from views directory (for CSS)
+app.use(express.static(path.join(__dirname, 'views')));
+
 // Register the routes
+const userRouter = require('./routes/userRoutes');
 app.use('/', userRouter);
 const itemRouter = require('./routes/itemRouter');
 app.use('/', itemRouter);
+const claimRouter = require('./routes/claimRouter');
+app.use('/', claimRouter);
+const pageRouter = require('./routes/pageRouter');
+app.use('/', pageRouter);
+
 //image
 app.use('/uploads', express.static('uploads'))
 db.connect(err=> {
