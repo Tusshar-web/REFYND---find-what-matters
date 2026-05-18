@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
-      <h1>Welcome Admin</h1>
-
-    <h2><%= user.full_name %></h2>
-
-    <p>You can manage items and claims.</p>
+    <div class="container">
+        <div class="avatar">A</div>
+        <h1>Welcome Admin</h1>
+        <h2><%= user.full_name %></h2>
+        <p>You can manage items and claims.</p>
+        <div class="actions">
+            <a href="/items" class="btn btn-primary">Manage Items</a>
+            <a href="/claims" class="btn btn-secondary">Manage Claims</a>
+        </div>
+    </div>
 </body>
 </html>
