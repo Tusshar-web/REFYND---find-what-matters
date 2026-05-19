@@ -1,55 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Item</title>
-    <link rel="stylesheet" href="add-item.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 16px;
+            color: #1a1a2e;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+            padding: 40px 36px;
+            width: 100%;
+            max-width: 460px;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+
+        a {
+            font-size: 14px;
+            color: #5a67d8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #434190;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e8eaf0;
+            margin: 20px 0 28px;
+        }
+
+        form {
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a4a6a;
+            letter-spacing: 0.01em;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            padding: 10px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1.5px solid #dde0eb;
+            border-radius: 10px;
+            background: #fafbff;
+            color: #1a1a2e;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            outline: none;
+            width: 100%;
+        }
+
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.12);
+            background: #fff;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a4a6a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-color: #fafbff;
+            padding-right: 38px;
+            cursor: pointer;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.6;
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-family: inherit;
+            border: 1.5px dashed #c3c8e0;
+            border-radius: 10px;
+            background: #f5f7ff;
+            color: #4a4a6a;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            outline: none;
+        }
+
+        input[type="file"]:hover {
+            border-color: #5a67d8;
+            background: #eff0fd;
+        }
+
+        input[type="file"]:focus {
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.12);
+        }
+
+        button {
+            margin-top: 6px;
+            padding: 13px;
+            font-size: 16px;
+            font-family: inherit;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.35);
+            letter-spacing: 0.02em;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.92;
+            box-shadow: 0 6px 18px rgba(90, 103, 216, 0.45);
+        }
+
+        button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 6px rgba(90, 103, 216, 0.3);
+        }
+
+        .message {
+            margin-top: 16px;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Add Item</h1>
-    <a href="/items-page">View All Items</a>
-    <hr>
-    
-    <form id="addItemForm">
-        <label>Item Name</label>
-        <input type="text" id="item_name" required>
-        
-        <label>Item Type</label>
-        <select id="item_type" required>
-            <option value="" disabled selected>Select an option</option>
-            <option value="lost">Lost</option>
-            <option value="found">Found</option>
-        </select>
-        
-        <label>Category</label>
-        <input type="text" id="category" required>
-        
-        <label>Description</label>
-        <textarea id="description" required></textarea>
-        
-        <label>Image Upload</label>
-        <input type="file" id="image" accept="image/*" required>
-        
-        <button type="submit">Add Item</button>
-    </form>
-    <div class="message" id="message"></div>
+    <div class="container">
+        <h1>Add Item</h1>
+        <a href="/items-page">View All Items</a>
+        <hr>
+
+        <form id="addItemForm">
+            <div>
+                <label>Item Name</label>
+                <input type="text" id="item_name" required>
+            </div>
+
+            <div>
+                <label>Item Type</label>
+                <select id="item_type" required>
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="lost">Lost</option>
+                    <option value="found">Found</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Category</label>
+                <input type="text" id="category" required>
+            </div>
+
+            <div>
+                <label>Description</label>
+                <textarea id="description" required></textarea>
+            </div>
+
+            <div>
+                <label>Image Upload</label>
+                <input type="file" id="image" accept="image/*" required>
+            </div>
+
+            <button type="submit">Add Item</button>
+        </form>
+        <div class="message" id="message"></div>
+    </div>
 
     <script>
         document.getElementById('addItemForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const item_name = document.getElementById('item_name').value;
             const item_type = document.getElementById('item_type').value;
             const category = document.getElementById('category').value;
             const description = document.getElementById('description').value;
             const image = document.getElementById('image').files[0];
-            
-            // To test with authorization, you would set a token in localStorage after login.
-            // Example: localStorage.setItem('token', 'your_jwt_token_here');
+
             const token = localStorage.getItem('token');
             if (!token) {
-                document.getElementById('message').innerText = 'Error: No token found in localStorage. Please login and store the token to test adding items.';
+                document.getElementById('message').innerText = 'Error: No token found. Please login first.';
                 document.getElementById('message').style.color = 'red';
                 return;
             }
@@ -67,13 +248,13 @@
                 const response = await fetch('/add-item', {
                     method: 'POST',
                     headers: {
-                        'Authorization': token
+                        'Authorization': `Bearer ${token}`
                     },
                     body: formData
                 });
 
                 const result = await response.json();
-                
+
                 if (response.ok) {
                     document.getElementById('message').innerText = result.message || 'Item added successfully!';
                     document.getElementById('message').style.color = 'green';
@@ -89,4 +270,5 @@
         });
     </script>
 </body>
+
 </html>
