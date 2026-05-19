@@ -1,125 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>Report Lost Item</h1>
 
-    <form id="addItemForm" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="item_type" id="item_type" value="lost" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-      <input
-        type="text"
-        name="item_name"
-        id="item_name"
-        placeholder="Item Name"
-        required
-      />
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
 
-      <br /><br />
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 24px;
+    }
 
-      <input
-        type="text"
-        id="category"
-        name="category"
-        placeholder="Category"
-        required
-      />
+    form {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      max-width: 500px;
+    }
 
-      <br /><br />
+    input[type="text"],
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #333;
+      background-color: #fafafa;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
 
-      <textarea
-        name="description"
-        id="description"
-        placeholder="Describe your lost item"
-        required
-      ></textarea>
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #4a6cf7;
+      box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.15);
+      background-color: #fff;
+    }
 
-      <br /><br />
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
 
-      <input type="file" name="image" id="image" required />
+    input[type="file"] {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
 
-      <br /><br />
+    br {
+      display: none;
+    }
 
-      <button type="submit">Report Lost Item</button>
-    </form>
-    <script>
-      document
-        .getElementById("addItemForm")
+    form>*:not(button) {
+      display: block;
+      margin-bottom: 16px;
+    }
 
-        .addEventListener(
-          "submit",
+    button[type="submit"] {
+      width: 100%;
+      padding: 11px;
+      background-color: #4a6cf7;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      margin-top: 6px;
+    }
 
-          async (e) => {
-            e.preventDefault();
+    button[type="submit"]:hover {
+      background-color: #3a5ce5;
+    }
 
-            const formData = new FormData();
+    button[type="submit"]:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
 
-            formData.append(
-              "item_name",
+<body>
+  <h1>Report Lost Item</h1>
 
-              document.getElementById("item_name").value,
-            );
+  <form id="addItemForm" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="item_type" id="item_type" value="lost" />
 
-            formData.append(
-              "item_type",
+    <input type="text" name="item_name" id="item_name" placeholder="Item Name" required />
 
-              document.getElementById("item_type").value,
-            );
+    <br /><br />
 
-            formData.append(
-              "category",
+    <input type="text" id="category" name="category" placeholder="Category" required />
 
-              document.getElementById("category").value,
-            );
+    <br /><br />
 
-            formData.append(
-              "description",
+    <textarea name="description" id="description" placeholder="Describe your lost item" required></textarea>
 
-              document.getElementById("description").value,
-            );
+    <br /><br />
 
-            formData.append(
-              "image",
+    <input type="file" name="image" id="image" required />
 
-              document.getElementById("image").files[0],
-            );
+    <br /><br />
 
-            try {
-              const token = localStorage.getItem("token");
-                if (!token) {
-                    alert('You are not logged in');
-                    return;
-                }
-              const response = await fetch(
-                "/add-item",
+    <button type="submit">Report Lost Item</button>
+  </form>
+  <script>
+    document
+      .getElementById("addItemForm")
 
-                {
-                  method: "POST",
+      .addEventListener(
+        "submit",
 
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
+        async (e) => {
+          e.preventDefault();
 
-                  body: formData,
-                },
-              );
+          const formData = new FormData();
 
-              const data = await response.json();
+          formData.append(
+            "item_name",
 
-              if (response.ok) {
-                alert("Item Added Successfully");
-              } else {
-                alert(data.message);
-              }
-            } catch (error) {
-              console.log(error);
+            document.getElementById("item_name").value,
+          );
+
+          formData.append(
+            "item_type",
+
+            document.getElementById("item_type").value,
+          );
+
+          formData.append(
+            "category",
+
+            document.getElementById("category").value,
+          );
+
+          formData.append(
+            "description",
+
+            document.getElementById("description").value,
+          );
+
+          formData.append(
+            "image",
+
+            document.getElementById("image").files[0],
+          );
+
+          try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+              alert('You are not logged in');
+              return;
             }
-          },
-        );
-    </script>
-  </body>
+            const response = await fetch(
+              "/add-item",
+
+              {
+                method: "POST",
+
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+
+                body: formData,
+              },
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+              alert("Item Added Successfully");
+            } else {
+              alert(data.message);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        },
+      );
+  </script>
+</body>
+
 </html>
