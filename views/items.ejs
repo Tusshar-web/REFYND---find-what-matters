@@ -1,43 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Items List</title>
-    <link rel="stylesheet" href="items.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 40px 16px;
+            color: #1a1a2e;
+        }
+
+        /* TOPBAR */
+
+        .topbar {
+            max-width: 860px;
+            margin: 0 auto 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .topbar h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .topbar-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .link-btn {
+            padding: 9px 18px;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            display: inline-block;
+            border: none;
+        }
+
+        .link-btn-primary {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.35);
+        }
+
+        .link-btn-primary:hover {
+            opacity: 0.92;
+            box-shadow: 0 6px 18px rgba(90, 103, 216, 0.45);
+        }
+
+        .link-btn-outline {
+            background: #fff;
+            color: #5a67d8;
+            border: 1.5px solid #5a67d8;
+        }
+
+        .link-btn-outline:hover {
+            background: #f0f2ff;
+        }
+
+        .link-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* SEARCH */
+
+        .search-bar {
+            max-width: 860px;
+            margin: 0 auto 24px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1.5px solid #dde0eb;
+            border-radius: 10px;
+            background: #fff;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-bar input:focus {
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.12);
+        }
+
+        .search-bar button {
+            padding: 10px 22px;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 600;
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+            transition: opacity 0.2s, transform 0.15s;
+        }
+
+        .search-bar button:hover {
+            opacity: 0.92;
+        }
+
+        .search-bar button:active {
+            transform: scale(0.98);
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e8eaf0;
+            max-width: 860px;
+            margin: 0 auto 28px;
+        }
+
+        /* ITEMS GRID */
+
+        #itemsContainer {
+            max-width: 860px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        #itemsContainer p {
+            font-size: 15px;
+            color: #6b7280;
+            grid-column: 1 / -1;
+        }
+
+        /* ITEM CARD */
+
+        .item-card {
+            background: #ffffff;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .item-card:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .item-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .item-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .item-card p {
+            font-size: 14px;
+            color: #374151;
+            line-height: 1.6;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .item-card p:last-of-type {
+            border-bottom: none;
+        }
+
+        .item-card p strong {
+            color: #4a4a6a;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+
+        .item-card .view-btn {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 9px 18px;
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+            transition: opacity 0.2s, transform 0.15s;
+            align-self: flex-start;
+        }
+
+        .item-card .view-btn:hover {
+            opacity: 0.92;
+        }
+
+        .item-card .view-btn:active {
+            transform: scale(0.98);
+        }
+
+        .error {
+            color: #991b1b;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
 </head>
+
 <body>
-    <form id="searchForm">
-        <input
-            type="text"
-            id="searchInput"
-            name="keyword"
-            placeholder="Search items"
-        >
-        <button type="submit">
-            Search
-        </button>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <h1>All Items</h1>
+        <div class="topbar-links">
+            <a href="/report-lost" class="link-btn link-btn-primary">Report Lost Item</a>
+            <a href="/report-found" class="link-btn link-btn-primary">Report Found Item</a>
+            <a href="/my-claims-page" class="link-btn link-btn-outline">My Claims</a>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <form id="searchForm" class="search-bar">
+        <input type="text" id="searchInput" name="keyword" placeholder="Search items...">
+        <button type="submit">Search</button>
     </form>
-    <h1>All Items</h1>
-    <a>Add New Item</a>
-    <a href="/report-lost">
 
-    <button>
-        Report Lost Item
-    </button>
-
-</a>
-
-<a href="/report-found">
-
-    <button>
-        Report Found Item
-    </button>
-
-</a>
-
-<a href="/my-claims-page">My Claims</a>
     <hr>
+
     <div id="itemsContainer">Loading items...</div>
 
     <script>
@@ -52,9 +279,9 @@
                 const url = keyword ? '/search?keyword=' + encodeURIComponent(keyword) : '/items';
                 const response = await fetch(url);
                 const result = await response.json();
-                
+
                 const container = document.getElementById('itemsContainer');
-                
+
                 if (response.ok && result.items) {
                     if (result.items.length === 0) {
                         container.innerHTML = '<p>No items found.</p>';
@@ -63,23 +290,25 @@
 
                     container.innerHTML = result.items.map(item => `
                         <div class="item-card">
-                            ${item.image_url ? `<img src="/uploads/${item.image_url}" alt="${item.item_name}" style="max-width: 200px; max-height: 200px; display: block; margin-bottom: 10px; border-radius: 4px;">` : ''}
+                            ${item.image_url ? `<img src="/uploads/${item.image_url}" alt="${item.item_name}">` : ''}
                             <h3>${item.item_name}</h3>
                             <p><strong>Type:</strong> ${item.item_type}</p>
                             <p><strong>Category:</strong> ${item.category}</p>
                             <p><strong>Description:</strong> ${item.description}</p>
-                            <a href="/item-page/${item.item_id}" style="display: inline-block; margin-top: 10px; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px;">View Details</a>
+                            <a href="/item-page/${item.item_id}" class="view-btn">View Details</a>
                         </div>
                     `).join('');
                 } else {
                     container.innerHTML = `<p class="error">${result.message || 'Failed to load items.'}</p>`;
                 }
             } catch (error) {
-                document.getElementById('itemsContainer').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                document.getElementById('itemsContainer').innerHTML =
+                    `<p class="error">Error: ${error.message}</p>`;
             }
         }
 
         fetchItems();
     </script>
 </body>
+
 </html>

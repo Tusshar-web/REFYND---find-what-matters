@@ -1,54 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-    <link rel="stylesheet" href="signup.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 16px;
+            color: #1a1a2e;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a4a6a;
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1.5px solid #dde0eb;
+            border-radius: 10px;
+            background: #fafbff;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.12);
+            background: #fff;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a4a6a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-color: #fafbff;
+            padding-right: 38px;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 600;
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.35);
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            margin-top: 6px;
+        }
+
+        button[type="submit"]:hover {
+            opacity: 0.92;
+            box-shadow: 0 6px 18px rgba(90, 103, 216, 0.45);
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+    </style>
 </head>
+
 <body>
-   
-    <h1>Signup</h1>
+    <div class="container">
+        <h1>Signup</h1>
 
-    <form action="/signup" method="POST">
+        <form action="/signup" method="POST">
+            <div class="form-group">
+                <label for="full_name">Full Name</label>
+                <input type="text" id="full_name" name="full_name" placeholder="Enter Name" required>
+            </div>
 
-        <input
-            type="text"
-            name="full_name"
-            placeholder="Enter Name"
-            required
-        >
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter Email" required>
+            </div>
 
-        <br><br>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter Password" required>
+            </div>
 
-        <input
-            type="email"
-            name="email"
-            placeholder="Enter Email"
-            required
-        >
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select name="role" id="role" required>
+                    <option value="" disabled selected>Select a role</option>
+                    <option value="student">Student</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
 
-        <br><br>
-
-        <input
-            type="password"
-            name="password"
-            placeholder="Enter Password"
-            required
-        >
-
-        <label for="role">Role:</label>
-        <select name="role" id="role" required>
-            <option value="student">Student</option>
-            <option value="admin">Admin</option>
-        </select>
-
-        <br><br>
-
-        <button type="submit">
-            Signup
-        </button>
-
-    </form>
+            <button type="submit">Signup</button>
+        </form>
+    </div>
 </body>
+
 </html>
