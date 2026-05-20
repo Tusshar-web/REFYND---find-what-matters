@@ -272,24 +272,10 @@
 
                             ?
 
-                            `<button
-
-                                id="claimBtn"
-
-                                style="
-                                    margin-top:15px;
-                                    background:#007bff;
-                                    color:white;
-                                    border:none;
-                                    padding:10px 15px;
-                                    border-radius:4px;
-                                    cursor:pointer;
-                                "
-                            >
-
+                            `<button id="claimBtn" class="claim-btn">
                                 Claim This Item
-
-                            </button>`
+                            </button>
+                            ${item.item_type === 'lost' ? `<a href="/matches/${itemId}" class="claim-btn" style="display:inline-block;margin-left:10px;text-decoration:none;">🔍 Find AI Matches</a>` : ''}`
 
                             :
 

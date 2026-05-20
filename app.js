@@ -27,6 +27,8 @@ const claimRouter = require('./routes/claimRouter');
 app.use('/', claimRouter);
 const pageRouter = require('./routes/pageRouter');
 app.use('/', pageRouter);
+const matchRouter = require('./routes/matchRouter');
+app.use('/match', matchRouter);
 
 //image
 app.use('/uploads', express.static('uploads'))
