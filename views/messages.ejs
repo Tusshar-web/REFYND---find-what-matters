@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat | REFYND</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-color: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border-color: #E5E7EB;
+            --msg-admin-bg: #F3F4F6;
+            --msg-admin-text: #1F2937;
+            --msg-student-bg: #4F46E5;
+            --msg-student-text: #FFFFFF;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            width: 95%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+        }
+        .chat-header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-main);
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: var(--bg-color);
+        }
+        .message-wrapper {
+            display: flex;
+            flex-direction: column;
+            max-width: 75%;
+        }
+        .message-wrapper.student {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+        .message-wrapper.admin {
+            align-self: flex-start;
+            align-items: flex-start;
+        }
+        .message-sender {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .student .message-bubble {
+            background-color: var(--msg-student-bg);
+            color: var(--msg-student-text);
+            border-bottom-right-radius: 4px;
+        }
+        .admin .message-bubble {
+            background-color: var(--msg-admin-bg);
+            color: var(--msg-admin-text);
+            border-bottom-left-radius: 4px;
+        }
+        .chat-input-area {
+            padding: 20px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+        }
+        .chat-form {
+            display: flex;
+            gap: 12px;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input:focus {
+            border-color: var(--primary);
+        }
+        .chat-submit {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 0 24px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .chat-submit:hover {
+            background-color: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/navTitle') %>
+    
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Chat Discussion</h1>
+        </div>
+
+        <div class="chat-messages" id="messages">
+            <!-- Messages will be loaded here -->
+        </div>
+
+        <div class="chat-input-area">
+            <form class="chat-form" id="messageForm">
+                <input 
+                    type="text" 
+                    id="messageInput" 
+                    class="chat-input"
+                    placeholder="Type your message..." 
+                    required
+                    autocomplete="off"
+                >
+                <button type="submit" class="chat-submit">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const itemId = "<%= itemId %>";
+        
+        async function loadMessages() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            
+            try {
+                const response = await fetch('/messages/' + itemId, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                const container = document.getElementById('messages');
+                
+                let isScrolledToBottom = container.scrollHeight - container.clientHeight <= container.scrollTop + 1;
+                
+                container.innerHTML = data.messages.map(msg => {
+                    // Determine role class for styling
+                    const roleClass = (msg.sender_role || '').toLowerCase() === 'admin' ? 'admin' : 'student';
+                    const senderName = msg.sender_role || 'User';
+                    
+                    return `
+                        <div class="message-wrapper ${roleClass}">
+                            <div class="message-sender">${senderName}</div>
+                            <div class="message-bubble">${msg.message_text}</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Auto scroll to bottom on new messages
+                if (isScrolledToBottom) {
+                    container.scrollTop = container.scrollHeight;
+                }
+            } catch (error) {
+                console.error("Failed to load messages", error);
+            }
+        }
+
+        document.getElementById('messageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('messageInput');
+            const message_text = input.value.trim();
+            if (!message_text) return;
+            
+            const token = localStorage.getItem('token');
+            
+            await fetch('/messages/' + itemId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ message_text })
+            });
+            
+            input.value = '';
+            await loadMessages();
+            
+            // Scroll to bottom after sending
+            const container = document.getElementById('messages');
+            container.scrollTop = container.scrollHeight;
+        });
+
+        // Initial load and scroll to bottom
+        loadMessages().then(() => {
+            const container = document.getElementById('messages');
+            container.scrollTop = container.scrollHeight;
+        });
+
+        // Polling
+        setInterval(loadMessages, 3000);
+    </script>
+</body>
+</html>

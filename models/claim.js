@@ -30,11 +30,35 @@ const getAllClaims = (callback)=> {
     db.query(sql, callback);
 }
 
-// ✅ Add this to claimModel.js
+
 const getClaimsByUser = (user_id, callback) => {
     const sql = `SELECT * FROM Claims WHERE claimant_id = ?`;
     db.query(sql, [user_id], callback);
 }
+
+const getItemsByUser = (
+    user_id,
+    callback
+) => {
+
+    const sql = `
+
+    SELECT *
+
+    FROM Items
+
+    WHERE user_id = ?
+    `;
+
+    db.query(
+
+        sql,
+
+        [user_id],
+
+        callback
+    );
+};
 
 module.exports = { createClaim, getAllClaims, getClaimsByUser };
 

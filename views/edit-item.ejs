@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Item | REFYND</title>
+    <style>
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14.5px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            transition: color 0.2s;
+        }
+        
+        .back-link:hover {
+            color: #4f46e5;
+        }
+
+        .form-container {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #e8edf5;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            max-width: 640px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-family: inherit;
+            color: #1e293b;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4f46e5;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+        }
+        
+        .file-input-wrapper input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 10px;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-input-wrapper input[type="file"]:hover {
+            border-color: #94a3b8;
+            background: #f1f5f9;
+        }
+
+        .file-input-wrapper input[type="file"]::file-selector-button {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            margin-right: 12px;
+            transition: background 0.2s;
+        }
+        
+        .file-input-wrapper input[type="file"]::file-selector-button:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 3.5px solid rgba(79, 70, 229, 0.1);
+            border-radius: 50%;
+            border-top-color: #4f46e5;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1e293b;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 9999;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/navTitle') %>
+    <div class="main-content" style="padding: 32px 40px; flex: 1;">
+        <div class="page-header">
+            <a href="/my-items" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i> Back to My Items
+            </a>
+            <h1 class="page-title">Edit Item</h1>
+        </div>
+
+        <div class="form-container">
+            <form id="editForm">
+                <div class="form-group">
+                    <label class="form-label" for="item_name">Item Name</label>
+                    <input type="text" id="item_name" class="form-control" value="<%= item.item_name %>" required placeholder="e.g. Blue Backpack">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="category">Category</label>
+                    <input type="text" id="category" class="form-control" value="<%= item.category %>" required placeholder="e.g. Electronics, Bags, Keys">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea id="description" name="description" class="form-control" required placeholder="Provide a detailed description..."><%= item.description %></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="image">Update Image (optional)</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="image" name="image" accept="image/*">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <i class="fa-regular fa-floppy-disk"></i> Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+</div> <!-- Close app-body -->
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+</div>
+
+<div class="toast" id="toastMessage"></div>
+
+<script>
+    const itemId = "<%= item.item_id %>";
+
+    function showToast(message, isError = false) {
+        const toast = document.getElementById('toastMessage');
+        toast.textContent = message;
+        toast.style.background = isError ? '#ef4444' : '#10b981';
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    document.getElementById('editForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const overlay = document.getElementById('loadingOverlay');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        overlay.style.display = 'flex';
+        submitBtn.disabled = true;
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('item_name', document.getElementById('item_name').value);
+            formData.append('category', document.getElementById('category').value);
+            formData.append('description', document.getElementById('description').value);
+            
+            const imageFile = document.getElementById('image').files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+
+            const response = await fetch('/update-items/' + itemId, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showToast(data.message || 'Item updated successfully!');
+                setTimeout(() => {
+                    window.location.href = '/my-items';
+                }, 1500);
+            } else {
+                showToast(data.message || 'Failed to update item', true);
+                overlay.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error('Update error:', error);
+            showToast('An error occurred while updating.', true);
+            overlay.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>

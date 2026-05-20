@@ -80,16 +80,6 @@ const loginUser = (req,res) =>  {
                 return res.send('Incorrect password')
             }
             
-            // if(user.role === 'admin') {
-            //     return res.render(
-            //         'admin', 
-            //         {user: user})
-            // }
-            // res.render(
-            //     'student', 
-            //     {user : user})
-
-            //generate token
             const token = jwt.sign(
                 {
                     id:user.user_id,

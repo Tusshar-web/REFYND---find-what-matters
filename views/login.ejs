@@ -158,9 +158,9 @@
 
         <hr class="divider">
 
-        <form action="/items-page" method="GET">
-            <button type="submit" class="btn btn-outline">Go to Home Page</button>
-        </form>
+        <p style="text-align: center; font-size: 14px; font-weight: 500; color: #4a4a6a; margin-top: 10px;">
+            Don't have an account? <a href="/" style="color: #5a67d8; text-decoration: none; font-weight: 600;">Sign up</a>
+        </p>
 
         <div id="message"></div>
     </div>
@@ -186,8 +186,13 @@
 
                     if (response.ok && result.token) {
                         localStorage.setItem('token', result.token);
-                        messageEl.innerText = 'Login successful! Token saved to localStorage.';
+                        localStorage.setItem('user', JSON.stringify(result.user));
+                        messageEl.innerText = 'Login successful! Redirecting...';
                         messageEl.className = 'success';
+                        
+                        setTimeout(() => {
+                            window.location.href = '/items-page';
+                        }, 1000);
                     } else {
                         messageEl.innerText = result.message || 'Login failed.';
                         messageEl.className = 'error';

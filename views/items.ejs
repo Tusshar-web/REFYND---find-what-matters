@@ -1,37 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Items List</title>
     <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        .dashboard-layout {
+            display: flex;
+            gap: 20px;
+            padding: 0 16px 16px 16px;
+            align-items: flex-start;
         }
 
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f0f2f5;
-            min-height: 100vh;
-            padding: 40px 16px;
-            color: #1a1a2e;
+        .left-column {
+            flex: 3;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* TOPBAR */
+        .right-column {
+            flex: 1;
+            border-radius: 20px;
+            background: white;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 16px 40px rgba(30, 41, 59, 0.04);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+        }
 
+        .content-inner {
+            padding: 24px;
+        }
+
+        /* ── TOPBAR ── */
         .topbar {
-            max-width: 860px;
-            margin: 0 auto 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 12px;
+            margin-bottom: 20px;
         }
 
         .topbar h1 {
@@ -66,10 +78,7 @@
             box-shadow: 0 4px 12px rgba(90, 103, 216, 0.35);
         }
 
-        .link-btn-primary:hover {
-            opacity: 0.92;
-            box-shadow: 0 6px 18px rgba(90, 103, 216, 0.45);
-        }
+        .link-btn-primary:hover { opacity: 0.92; }
 
         .link-btn-outline {
             background: #fff;
@@ -77,77 +86,20 @@
             border: 1.5px solid #5a67d8;
         }
 
-        .link-btn-outline:hover {
-            background: #f0f2ff;
-        }
-
-        .link-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* SEARCH */
-
-        .search-bar {
-            max-width: 860px;
-            margin: 0 auto 24px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-bar input {
-            flex: 1;
-            padding: 10px 14px;
-            font-size: 15px;
-            font-family: inherit;
-            border: 1.5px solid #dde0eb;
-            border-radius: 10px;
-            background: #fff;
-            color: #1a1a2e;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .search-bar input:focus {
-            border-color: #5a67d8;
-            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.12);
-        }
-
-        .search-bar button {
-            padding: 10px 22px;
-            font-size: 15px;
-            font-family: inherit;
-            font-weight: 600;
-            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
-            transition: opacity 0.2s, transform 0.15s;
-        }
-
-        .search-bar button:hover {
-            opacity: 0.92;
-        }
-
-        .search-bar button:active {
-            transform: scale(0.98);
-        }
+        .link-btn-outline:hover { background: #f0f2ff; }
+        .link-btn:active { transform: scale(0.98); }
 
         hr {
             border: none;
             border-top: 1px solid #e8eaf0;
-            max-width: 860px;
-            margin: 0 auto 28px;
+            margin-bottom: 20px;
         }
 
-        /* ITEMS GRID */
-
+        /* ── ITEMS GRID ── */
         #itemsContainer {
-            max-width: 860px;
-            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            /* grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); */
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
 
@@ -157,21 +109,20 @@
             grid-column: 1 / -1;
         }
 
-        /* ITEM CARD */
-
+        /* ── ITEM CARD ── */
         .item-card {
             background: #ffffff;
-            border: none;
             border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
             padding: 20px;
             display: flex;
+            height: 100%;
             flex-direction: column;
             transition: box-shadow 0.2s, transform 0.2s;
         }
 
         .item-card:hover {
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
             transform: translateY(-2px);
         }
 
@@ -181,7 +132,6 @@
             object-fit: cover;
             border-radius: 10px;
             margin-bottom: 16px;
-            display: block;
         }
 
         .item-card h3 {
@@ -199,15 +149,8 @@
             border-bottom: 1px solid #f0f2f5;
         }
 
-        .item-card p:last-of-type {
-            border-bottom: none;
-        }
-
-        .item-card p strong {
-            color: #4a4a6a;
-            font-weight: 600;
-            margin-right: 4px;
-        }
+        .item-card p:last-of-type { border-bottom: none; }
+        .item-card p strong { color: #4a4a6a; font-weight: 600; margin-right: 4px; }
 
         .item-card .view-btn {
             display: inline-block;
@@ -220,18 +163,13 @@
             font-size: 14px;
             font-weight: 600;
             font-family: inherit;
-            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+            box-shadow: 0 4px 12px rgba(90,103,216,0.3);
             transition: opacity 0.2s, transform 0.15s;
             align-self: flex-start;
         }
 
-        .item-card .view-btn:hover {
-            opacity: 0.92;
-        }
-
-        .item-card .view-btn:active {
-            transform: scale(0.98);
-        }
+        .item-card .view-btn:hover { opacity: 0.92; }
+        .item-card .view-btn:active { transform: scale(0.98); }
 
         .error {
             color: #991b1b;
@@ -242,73 +180,248 @@
             font-size: 14px;
             font-weight: 500;
         }
+
+        .content-box {
+            border-radius: 20px;
+            background: white;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 16px 40px rgba(30, 41, 59, 0.04);
+        }
+
+        /* ── HERO ── */
+        .hero-box {
+            background: linear-gradient(135deg, #5a67d8 0%, #7c3aed 60%, #6b46c1 100%);
+            border-radius: 16px;
+            padding: 36px 40px;
+            margin: 16px 16px 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            min-height: 180px;
+        }
+
+        .hero-text {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .hero-greeting {
+            font-size: 15px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .hero-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        .hero-sub {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            margin: 0;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.15s;
+            display: inline-block;
+        }
+
+        .hero-btn:active { transform: scale(0.97); }
+
+        .hero-btn-outline {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1.5px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .hero-btn-outline:hover { background: rgba(255,255,255,0.25); }
+
+        .hero-btn-solid {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border: 1.5px solid rgba(255,255,255,0.3);
+        }
+
+        .hero-btn-solid:hover { background: rgba(255,255,255,0.3); }
+
+        .hero-circles {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.07);
+        }
+
+        .c1 { width: 260px; height: 260px; top: -80px; right: -60px; }
+        .c2 { width: 200px; height: 200px; bottom: -80px; right: 80px; }
+        .c3 { width: 140px; height: 140px; top: 20px; right: 160px; }
+
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
     </style>
 </head>
 
-<body>
+<%- include('partials/navTitle') %>
 
-    <!-- TOPBAR -->
-    <div class="topbar">
-        <h1>All Items</h1>
-        <div class="topbar-links">
-            <a href="/report-lost" class="link-btn link-btn-primary">Report Lost Item</a>
-            <a href="/report-found" class="link-btn link-btn-primary">Report Found Item</a>
-            <a href="/my-claims-page" class="link-btn link-btn-outline">My Claims</a>
+<div class="page-wrapper">
+
+    <!-- HERO -->
+    <div class="hero-box">
+        <div class="hero-text">
+            <p class="hero-greeting" id="heroGreeting">Good morning 👋</p>
+            <h2 class="hero-title">Welcome back, <span id="heroName">there</span>!</h2>
+            <p class="hero-sub">Track and recover your belongings across campus.</p>
+            <div class="hero-btns">
+                <a href="/report-lost" class="hero-btn hero-btn-outline">+ Report Lost Item</a>
+                <a href="/smart-matches" class="hero-btn hero-btn-solid">✨ View Matches</a>
+            </div>
+        </div>
+        <div class="hero-circles">
+            <div class="circle c1"></div>
+            <div class="circle c2"></div>
+            <div class="circle c3"></div>
         </div>
     </div>
 
-    <!-- SEARCH -->
-    <form id="searchForm" class="search-bar">
-        <input type="text" id="searchInput" name="keyword" placeholder="Search items...">
-        <button type="submit">Search</button>
-    </form>
+    <div class="dashboard-layout">
 
-    <hr>
+        <div class="left-column">
+            <div class="content-box">
+                <div class="content-inner">
 
-    <div id="itemsContainer">Loading items...</div>
+                    <!-- TOPBAR (properly closed) -->
+                    <div class="topbar">
+                        <h1>All Items</h1>
+                        <div class="topbar-links">
+                            <a href="/report-lost" class="link-btn link-btn-primary">+ Report Lost</a>
+                            <a href="/report-found" class="link-btn link-btn-outline">+ Report Found</a>
+                        </div>
+                    </div><!-- /.topbar -->
 
-    <script>
-        document.getElementById('searchForm').addEventListener('submit', (e) => {
+                    <hr>
+
+                    <div id="itemsContainer">Loading items...</div>
+
+                </div><!-- /.content-inner -->
+            </div><!-- /.content-box -->
+        </div><!-- /.left-column -->
+
+        <!-- Right side column -->
+        <div class="right-column">
+            <h3 style="font-size: 18px; margin-bottom: 12px; color: #1a1a2e;">Extra Features</h3>
+            <p style="font-size: 14px; color: #6b7280; line-height: 1.5;">You can add more features here on the right side.</p>
+        </div>
+
+    </div><!-- /.dashboard-layout -->
+
+</div><!-- /.page-wrapper -->
+
+<script>
+    // Search form (lives in nav partial's #searchForm)
+    const searchForm = document.getElementById('searchForm');
+    if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const keyword = document.getElementById('searchInput').value;
             fetchItems(keyword);
         });
+    }
 
-        async function fetchItems(keyword = '') {
-            try {
-                const url = keyword ? '/search?keyword=' + encodeURIComponent(keyword) : '/items';
-                const response = await fetch(url);
-                const result = await response.json();
+    async function fetchItems(keyword = '') {
+        try {
+            const url = keyword
+                ? '/search?keyword=' + encodeURIComponent(keyword)
+                : '/items';
+            const response = await fetch(url);
+            const result = await response.json();
+            const container = document.getElementById('itemsContainer');
 
-                const container = document.getElementById('itemsContainer');
-
-                if (response.ok && result.items) {
-                    if (result.items.length === 0) {
-                        container.innerHTML = '<p>No items found.</p>';
-                        return;
-                    }
-
-                    container.innerHTML = result.items.map(item => `
-                        <div class="item-card">
-                            ${item.image_url ? `<img src="/uploads/${item.image_url}" alt="${item.item_name}">` : ''}
-                            <h3>${item.item_name}</h3>
-                            <p><strong>Type:</strong> ${item.item_type}</p>
-                            <p><strong>Category:</strong> ${item.category}</p>
-                            <p><strong>Description:</strong> ${item.description}</p>
-                            <a href="/item-page/${item.item_id}" class="view-btn">View Details</a>
-                        </div>
-                    `).join('');
-                } else {
-                    container.innerHTML = `<p class="error">${result.message || 'Failed to load items.'}</p>`;
+            if (response.ok && result.items) {
+                if (result.items.length === 0) {
+                    container.innerHTML = '<p>No items found.</p>';
+                    return;
                 }
-            } catch (error) {
-                document.getElementById('itemsContainer').innerHTML =
-                    `<p class="error">Error: ${error.message}</p>`;
+                container.innerHTML = result.items.map(item => `
+                    <div class="item-card">
+                        ${item.image_url
+                            ? `<img src="/uploads/${item.image_url}" alt="${item.item_name}">`
+                            : ''}
+                        <h3>${item.item_name}</h3>
+                        <p><strong>Type:</strong> ${item.item_type}</p>
+                        <p><strong>Category:</strong> ${item.category}</p>
+                        <p><strong>Description:</strong> ${item.description}</p>
+                        <a href="/item-page/${item.item_id}" class="view-btn">View Details</a>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML =
+                    `<p class="error">${result.message || 'Failed to load items.'}</p>`;
             }
+        } catch (error) {
+            document.getElementById('itemsContainer').innerHTML =
+                `<p class="error">Error: ${error.message}</p>`;
         }
+    }
 
-        fetchItems();
-    </script>
+    fetchItems();
+
+    // Highlight active nav item
+    const path = window.location.pathname;
+    document.querySelectorAll('.nav-item[data-path]').forEach(el => {
+        if (el.dataset.path === path) el.classList.add('active');
+    });
+
+    // Populate user info — guard against missing elements
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.full_name) {
+        const userNameEl   = document.getElementById('userName');
+        const userAvatarEl = document.getElementById('userAvatar');
+        const heroNameEl   = document.getElementById('heroName');
+
+        if (userNameEl)   userNameEl.textContent   = user.full_name;
+        if (userAvatarEl) userAvatarEl.textContent  =
+            user.full_name.split(' ').map(n => n[0]).join('').toUpperCase();
+        if (heroNameEl)   heroNameEl.textContent    = user.full_name.split(' ')[0];
+    }
+
+    // Dynamic greeting
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'Good morning 👋'
+                   : hour < 18 ? 'Good afternoon 👋'
+                   :             'Good evening 👋';
+    const heroGreetingEl = document.getElementById('heroGreeting');
+    if (heroGreetingEl) heroGreetingEl.textContent = greeting;
+</script>
+
 </body>
-
 </html>
