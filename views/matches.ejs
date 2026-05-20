@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Matches - REFYND</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 40px 16px;
+            color: #1a1a2e;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1a1a2e;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 32px;
+        }
+
+        .lost-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+            border-left: 4px solid #ef4444;
+        }
+
+        .lost-card h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ef4444;
+            margin-bottom: 8px;
+        }
+
+        .match-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .match-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .match-card .no-img {
+            width: 80px;
+            height: 80px;
+            background: #e8eaf0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .match-info h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 4px;
+        }
+
+        .match-info .reason {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .score-bar {
+            background: #e8eaf0;
+            border-radius: 20px;
+            height: 8px;
+            width: 100%;
+            max-width: 200px;
+            margin-bottom: 8px;
+        }
+
+        .score-fill {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg, #5a67d8, #6b46c1);
+        }
+
+        .score-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #5a67d8;
+        }
+
+        .view-btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 7px 18px;
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            color: white;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .no-matches {
+            text-align: center;
+            padding: 40px;
+            color: #9ca3af;
+            font-size: 15px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #5a67d8;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            border: 3px solid #e8eaf0;
+            border-top: 3px solid #5a67d8;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/items-page" class="back-link">← Back to Items</a>
+        <h1>AI Match Results</h1>
+        <p class="subtitle">These found items most closely match your lost item, ranked by AI similarity.</p>
+        <div id="results">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Finding matches...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const itemId = "<%= itemId %>";
+        const token = localStorage.getItem('token');
+
+        async function loadMatches() {
+            try {
+                const res = await fetch('/match/' + itemId, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                const container = document.getElementById('results');
+
+                if (!res.ok) {
+                    container.innerHTML = `<p class="no-matches">${data.message}</p>`;
+                    return;
+                }
+
+                let html = `<div class="lost-card"><h2>Your Lost Item</h2><p><strong>${data.lostItem.item_name}</strong> — ${data.lostItem.category}</p><p style="margin-top:6px;font-size:14px;color:#6b7280">${data.lostItem.description}</p></div>`;
+
+                if (!data.matches || data.matches.length === 0) {
+                    html += `<div class="no-matches">No matching found items right now. Check back later!</div>`;
+                } else {
+                    data.matches.forEach((m, i) => {
+                        const imgHtml = m.item.image_url
+                            ? `<img src="/uploads/${m.item.image_url}" alt="${m.item.item_name}">`
+                            : `<div class="no-img">No image</div>`;
+                        html += `
+                        <div class="match-card">
+                            ${imgHtml}
+                            <div class="match-info">
+                                <h3>#${i + 1} — ${m.item.item_name}</h3>
+                                <p class="reason">${m.reason}</p>
+                                <div class="score-bar"><div class="score-fill" style="width:${m.match_score}%"></div></div>
+                                <span class="score-label">Match Score: ${m.match_score}%</span>
+                                <br>
+                                <a href="/item-detail/${m.item.id}" class="view-btn">View Item</a>
+                            </div>
+                        </div>`;
+                    });
+                }
+
+                container.innerHTML = html;
+            } catch (err) {
+                document.getElementById('results').innerHTML = `<p class="no-matches">Error: ${err.message}</p>`;
+            }
+        }
+
+        loadMatches();
+    </script>
+</body>
+
+</html>

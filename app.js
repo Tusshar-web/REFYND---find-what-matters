@@ -27,6 +27,8 @@ const claimRouter = require('./routes/claimRouter');
 app.use('/', claimRouter);
 const pageRouter = require('./routes/pageRouter');
 app.use('/', pageRouter);
+const matchRouter = require('./routes/matchRouter');
+app.use('/match', matchRouter);
 const messageRouter = require('./routes/messageRoutes');
 app.use('/', messageRouter);
 
