@@ -1,208 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report Lost Item | REFYND</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-color: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border-color: #E5E7EB;
+        }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f2f5;
-      color: #333;
-      padding: 40px 20px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    h1 {
-      font-size: 26px;
-      font-weight: 700;
-      color: #1a1a2e;
-      margin-bottom: 24px;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
 
-    form {
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-      max-width: 500px;
-    }
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 60px 20px;
+            width: 100%;
+        }
 
-    input[type="text"],
-    textarea,
-    input[type="file"] {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: inherit;
-      color: #333;
-      background-color: #fafafa;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-    }
+        .form-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
 
-    input[type="text"]:focus,
-    textarea:focus {
-      border-color: #4a6cf7;
-      box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.15);
-      background-color: #fff;
-    }
+        .form-header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
 
-    textarea {
-      resize: vertical;
-      min-height: 110px;
-    }
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
 
-    input[type="file"] {
-      padding: 8px 12px;
-      cursor: pointer;
-    }
+        form#addItemForm {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 550px;
+        }
 
-    br {
-      display: none;
-    }
+        .form-group {
+            margin-bottom: 24px;
+        }
 
-    form>*:not(button) {
-      display: block;
-      margin-bottom: 16px;
-    }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
 
-    button[type="submit"] {
-      width: 100%;
-      padding: 11px;
-      background-color: #4a6cf7;
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s, transform 0.1s;
-      margin-top: 6px;
-    }
+        input[type="text"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--text-main);
+            background-color: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
 
-    button[type="submit"]:hover {
-      background-color: #3a5ce5;
-    }
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
 
-    button[type="submit"]:active {
-      transform: scale(0.98);
-    }
-  </style>
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+            background-color: var(--bg-color);
+            border: 1px dashed var(--border-color);
+        }
+        
+        input[type="file"]:hover {
+            border-color: var(--primary);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 12px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+    </style>
 </head>
 
 <body>
-  <h1>Report Lost Item</h1>
+    <%- include('partials/navTitle') %>
+    
+    <div class="main-content" style="flex: 1; display: flex; justify-content: center;">
+        <div class="page-container">
+            <div class="form-header">
+                <h1>Report Lost Item</h1>
+                <p>Provide details about the item you lost so others can help you find it.</p>
+            </div>
 
-  <form id="addItemForm" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="item_type" id="item_type" value="lost" />
+            <form id="addItemForm" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="item_type" id="item_type" value="lost" />
 
-    <input type="text" name="item_name" id="item_name" placeholder="Item Name" required />
+                <div class="form-group">
+                    <label for="item_name">Item Name</label>
+                    <input type="text" name="item_name" id="item_name" placeholder="e.g. Blue Backpack" required />
+                </div>
 
-    <br /><br />
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <input type="text" id="category" name="category" placeholder="e.g. Electronics, Clothing" required />
+                </div>
 
-    <input type="text" id="category" name="category" placeholder="Category" required />
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" placeholder="Provide additional details about the item..." required></textarea>
+                </div>
 
-    <br /><br />
+                <div class="form-group">
+                    <label for="image">Upload Image</label>
+                    <input type="file" name="image" id="image" required />
+                </div>
 
-    <textarea name="description" id="description" placeholder="Describe your lost item" required></textarea>
+                <button type="submit">Submit Lost Item</button>
+            </form>
+        </div>
+    </div>
 
-    <br /><br />
+    <script>
+        document.getElementById("addItemForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
 
-    <input type="file" name="image" id="image" required />
+            const formData = new FormData();
+            formData.append("item_name", document.getElementById("item_name").value);
+            formData.append("item_type", document.getElementById("item_type").value);
+            formData.append("category", document.getElementById("category").value);
+            formData.append("description", document.getElementById("description").value);
+            formData.append("image", document.getElementById("image").files[0]);
 
-    <br /><br />
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    alert('You are not logged in');
+                    submitBtn.textContent = 'Submit Lost Item';
+                    submitBtn.disabled = false;
+                    return;
+                }
+                
+                const response = await fetch("/add-item", {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
 
-    <button type="submit">Report Lost Item</button>
-  </form>
-  <script>
-    document
-      .getElementById("addItemForm")
+                const data = await response.json();
 
-      .addEventListener(
-        "submit",
-
-        async (e) => {
-          e.preventDefault();
-
-          const formData = new FormData();
-
-          formData.append(
-            "item_name",
-
-            document.getElementById("item_name").value,
-          );
-
-          formData.append(
-            "item_type",
-
-            document.getElementById("item_type").value,
-          );
-
-          formData.append(
-            "category",
-
-            document.getElementById("category").value,
-          );
-
-          formData.append(
-            "description",
-
-            document.getElementById("description").value,
-          );
-
-          formData.append(
-            "image",
-
-            document.getElementById("image").files[0],
-          );
-
-          try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-              alert('You are not logged in');
-              return;
+                if (response.ok) {
+                    alert("Item Added Successfully");
+                    e.target.reset();
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.log(error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                submitBtn.textContent = 'Submit Lost Item';
+                submitBtn.disabled = false;
             }
-            const response = await fetch(
-              "/add-item",
-
-              {
-                method: "POST",
-
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-
-                body: formData,
-              },
-            );
-
-            const data = await response.json();
-
-            if (response.ok) {
-              alert("Item Added Successfully");
-            } else {
-              alert(data.message);
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        },
-      );
-  </script>
+        });
+    </script>
 </body>
-
 </html>

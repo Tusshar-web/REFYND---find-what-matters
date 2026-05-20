@@ -1,0 +1,410 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background: #f4f6fb;
+        color: #1e293b;
+        overflow: hidden; /* body stays locked — sidebar stays fixed */
+    }
+
+    .top-header {
+        height: 64px;
+        background: #fff;
+        border-bottom: 1px solid #e8edf5;
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+        gap: 16px;
+        z-index: 100;
+        flex-shrink: 0;
+    }
+
+    .top-header .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        min-width: 200px;
+    }
+
+    .brand-icon {
+        width: 34px;
+        height: 34px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .brand-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        letter-spacing: -0.3px;
+    }
+
+    /* ── SEARCH (now wraps the form) ── */
+    .header-search {
+        position: relative;
+        width: 420px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+    }
+
+    .header-search .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 13px;
+        pointer-events: none;
+    }
+
+    .header-search input {
+        width: 100%;
+        height: 38px;
+        padding: 0 100px 0 40px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 50px;
+        font-size: 13.5px;
+        font-family: inherit;
+        background: #f8fafc;
+        color: #1e293b;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .header-search input::placeholder { color: #94a3b8; }
+
+    .header-search input:focus {
+        border-color: #4f46e5;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+    }
+
+    .header-search button {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 28px;
+        padding: 0 14px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+
+    .header-search button:hover { opacity: 0.9; }
+
+    .header-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .notif-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-size: 15px;
+        position: relative;
+        transition: background 0.2s;
+    }
+
+    .notif-btn:hover { background: #e2e8f0; }
+
+    .notif-badge {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 8px;
+        height: 8px;
+        background: #f59e0b;
+        border-radius: 50%;
+        border: 2px solid #fff;
+    }
+
+    .user-pill {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 5px 12px 5px 5px;
+        border-radius: 50px;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        cursor: pointer;
+        transition: border-color 0.2s;
+    }
+
+    .user-pill:hover { border-color: #4f46e5; }
+
+    .user-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .user-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .user-pill i { font-size: 10px; color: #94a3b8; }
+
+    /* ── BODY LAYOUT ── */
+    .app-body {
+        display: flex;
+        flex: 1;
+        overflow-y: auto;   /* ← THIS is the scroll container */
+        overflow-x: hidden;
+        min-height: 0;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+        width: 220px;
+        background: #fff;
+        border-right: 1px solid #e8edf5;
+        padding: 20px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        flex-shrink: 0;
+        transition: width 0.3s ease;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .sidebar.collapsed {
+        width: 60px;
+        padding: 20px 8px;
+    }
+
+    .sidebar.collapsed .nav-label,
+    .sidebar.collapsed .section-title,
+    .sidebar.collapsed .nav-badge { display: none; }
+
+    .sidebar.collapsed .nav-item {
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .section-title {
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        padding: 0 8px;
+        margin-bottom: 4px;
+    }
+
+    .nav-group {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 10px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #64748b;
+        transition: all 0.18s ease;
+        cursor: pointer;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+    }
+
+    .nav-item i {
+        width: 18px;
+        text-align: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .nav-item:hover { background: #f1f5f9; color: #1e293b; }
+
+    .nav-item.active {
+        background: #ede9fe;
+        color: #4f46e5;
+        font-weight: 600;
+    }
+
+    .nav-item.active i { color: #4f46e5; }
+
+    .nav-badge {
+        margin-left: auto;
+        background: #4f46e5;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 50px;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .nav-badge.amber { background: #f59e0b; }
+
+    .nav-item.logout { color: #ef4444; margin-top: auto; }
+    .nav-item.logout:hover { background: #fef2f2; }
+
+    .main-content {
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .main-content::-webkit-scrollbar { display: none; }
+</style>
+
+<!-- TOP HEADER -->
+<div class="top-header">
+    <a href="/items-page" class="brand">
+        <div class="brand-icon">R</div>
+        <span class="brand-name">REFYND</span>
+    </a>
+
+    <div class="header-search">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <form id="searchForm" style="width:100%; display:flex; margin:0; padding:0; background:transparent; border:none; box-shadow:none;">
+            <input type="text" id="searchInput" name="keyword" placeholder="Search items...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="header-right">
+        <button class="notif-btn">
+            <i class="fa-regular fa-bell"></i>
+            <div class="notif-badge"></div>
+        </button>
+        <a href="/profile" style="text-decoration: none;">
+            <div class="user-pill">
+                <div class="user-avatar" id="navUserAvatar">U</div>
+                <span class="user-name" id="navUserName">User</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- APP BODY: sidebar + page content slot -->
+<div class="app-body">
+    <div class="sidebar" id="sidebar">
+        <div class="nav-group">
+            <div class="section-title">Main</div>
+            <a href="/items-page" class="nav-item" data-path="/items-page">
+                <i class="fa-solid fa-house"></i>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="/report-lost" class="nav-item" data-path="/report-lost">
+                <i class="fa-solid fa-thumbtack"></i>
+                <span class="nav-label">Report Lost</span>
+            </a>
+            <a href="/report-found" class="nav-item" data-path="/report-found">
+                <i class="fa-solid fa-box-open"></i>
+                <span class="nav-label">Report Found</span>
+            </a>
+        </div>
+
+        <div class="nav-group">
+            <div class="section-title">Discover</div>
+            <a href="/smart-matches" class="nav-item" data-path="/smart-matches">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span class="nav-label">Smart Matches</span>
+            </a>
+            <a href="/messages-page" class="nav-item" data-path="/messages">
+                <i class="fa-regular fa-comment-dots"></i>
+                <span class="nav-label">Messages</span>
+            </a>
+            <a href="/my-claims" class="nav-item" data-path="/my-claims">
+                <i class="fa-solid fa-tag"></i>
+                <span class="nav-label">Claims</span>
+            </a>
+            <a href="/my-items" class="nav-item" data-path="/my-items">
+                <i class="fa-solid fa-tag"></i>
+                <span class="nav-label">Items</span>
+            </a>
+        </div>
+
+        <div class="nav-group">
+            <div class="section-title">Profile</div>
+            <a href="/profile" class="nav-item" data-path="/profile">
+                <i class="fa-solid fa-gear"></i>
+                <span class="nav-label">Profile</span>
+            </a>
+        </div>
+
+        <div class="nav-group" style="margin-top: auto;">
+            <a href="/logout" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span class="nav-label">Logout</span>
+            </a>
+        </div>
+    </div>
+    <!-- Page content injected here by each .ejs view -->
+    <script>
+        (function() {
+            const path = window.location.pathname;
+            document.querySelectorAll('.nav-item[data-path]').forEach(el => {
+                if (el.dataset.path === path) {
+                    el.classList.add('active');
+                }
+            });
+
+            // Populate top header user pill globally
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user.full_name) {
+                const navUserName = document.getElementById('navUserName');
+                const navUserAvatar = document.getElementById('navUserAvatar');
+                if (navUserName) navUserName.textContent = user.full_name;
+                if (navUserAvatar) navUserAvatar.textContent = user.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            }
+        })();
+    </script>

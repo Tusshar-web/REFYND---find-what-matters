@@ -22,5 +22,16 @@ router.get('/items/:id', itemController.getItem);
 //search item 
 router.get('/search', itemController.searchItem);
 
+//get user registered items 
+router.get('/api/my-items', verifyToken, itemController.getMyItems);
+
+//edit the items 
+router.get('/edit-item/:id', verifyToken, itemController.showEditPage);
+router.put('/update-items/:id', verifyToken, upload.single('image'), itemController.updateItem);
+
+//delete the items 
+router.delete('/delete-item/:id', verifyToken, itemController.deleteItem);
+
+
 
 module.exports = router;

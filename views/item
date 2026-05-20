@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items List</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 40px 16px;
+            color: #1a1a2e;
+        }
+
+        /* TOPBAR */
+
+        .topbar {
+            max-width: 860px;
+            margin: 0 auto 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .topbar h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .topbar-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .link-btn {
+            padding: 9px 18px;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            display: inline-block;
+            border: none;
+        }
+
+        .link-btn-primary {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.35);
+        }
+
+        .link-btn-primary:hover {
+            opacity: 0.92;
+            box-shadow: 0 6px 18px rgba(90, 103, 216, 0.45);
+        }
+
+        .link-btn-outline {
+            background: #fff;
+            color: #5a67d8;
+            border: 1.5px solid #5a67d8;
+        }
+
+        .link-btn-outline:hover {
+            background: #f0f2ff;
+        }
+
+        .link-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* SEARCH */
+
+        .search-bar {
+            max-width: 860px;
+            margin: 0 auto 24px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1.5px solid #dde0eb;
+            border-radius: 10px;
+            background: #fff;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-bar input:focus {
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.12);
+        }
+
+        .search-bar button {
+            padding: 10px 22px;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 600;
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+            transition: opacity 0.2s, transform 0.15s;
+        }
+
+        .search-bar button:hover {
+            opacity: 0.92;
+        }
+
+        .search-bar button:active {
+            transform: scale(0.98);
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e8eaf0;
+            max-width: 860px;
+            margin: 0 auto 28px;
+        }
+
+        /* ITEMS GRID */
+
+        #itemsContainer {
+            max-width: 860px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        #itemsContainer p {
+            font-size: 15px;
+            color: #6b7280;
+            grid-column: 1 / -1;
+        }
+
+        /* ITEM CARD */
+
+        .item-card {
+            background: #ffffff;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .item-card:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .item-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .item-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .item-card p {
+            font-size: 14px;
+            color: #374151;
+            line-height: 1.6;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .item-card p:last-of-type {
+            border-bottom: none;
+        }
+
+        .item-card p strong {
+            color: #4a4a6a;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+
+        .item-card .view-btn {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 9px 18px;
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+            transition: opacity 0.2s, transform 0.15s;
+            align-self: flex-start;
+        }
+
+        .item-card .view-btn:hover {
+            opacity: 0.92;
+        }
+
+        .item-card .view-btn:active {
+            transform: scale(0.98);
+        }
+
+        .error {
+            color: #991b1b;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/navTitle') %>
+
+
+    <!-- TOPBAR
+    <div class="topbar">
+        <h1>All Items</h1>
+        <div class="topbar-links">
+            <a href="/report-lost" class="link-btn link-btn-primary">Report Lost Item</a>
+            <a href="/report-found" class="link-btn link-btn-primary">Report Found Item</a>
+            <a href="/my-claims" class="link-btn link-btn-outline">My Claims</a>
+            <a href="/my-items" class="link-btn link-btn-outline">My itmes</a>
+        </div>
+    </div> -->
+
+    <!-- SEARCH -->
+    <!-- <form id="searchForm" class="search-bar">
+        <input type="text" id="searchInput" name="keyword" placeholder="Search items...">
+        <button type="submit">Search</button>
+    </form> -->
+
+    <hr>
+
+    <div id="itemsContainer">Loading items...</div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const keyword = document.getElementById('searchInput').value;
+            fetchItems(keyword);
+        });
+
+        async function fetchItems(keyword = '') {
+            try {
+                const url = keyword ? '/search?keyword=' + encodeURIComponent(keyword) : '/items';
+                const response = await fetch(url);
+                const result = await response.json();
+
+                const container = document.getElementById('itemsContainer');
+
+                if (response.ok && result.items) {
+                    if (result.items.length === 0) {
+                        container.innerHTML = '<p>No items found.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = result.items.map(item => `
+                        <div class="item-card">
+                            ${item.image_url ? `<img src="/uploads/${item.image_url}" alt="${item.item_name}">` : ''}
+                            <h3>${item.item_name}</h3>
+                            <p><strong>Type:</strong> ${item.item_type}</p>
+                            <p><strong>Category:</strong> ${item.category}</p>
+                            <p><strong>Description:</strong> ${item.description}</p>
+                            <a href="/item-page/${item.item_id}" class="view-btn">View Details</a>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `<p class="error">${result.message || 'Failed to load items.'}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('itemsContainer').innerHTML =
+                    `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+
+        fetchItems();
+    </script>
+</div> <!-- Close main-section from navTitle -->
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.querySelector(".sidebar");
+        if(sidebar) sidebar.classList.toggle("hide");
+    }
+</script>
+</body>
+
+</html>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background: #f4f6fb;
+        color: #1e293b;
+        overflow: hidden;
+    }
+
+    /* ── TOP HEADER ── */
+    .top-header {
+        height: 64px;
+        background: #fff;
+        border-bottom: 1px solid #e8edf5;
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+        gap: 16px;
+        z-index: 100;
+        flex-shrink: 0;
+    }
+
+    .top-header .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        min-width: 200px;
+    }
+
+    .brand-icon {
+        width: 34px;
+        height: 34px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .brand-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        letter-spacing: -0.3px;
+    }
+
+    .header-search {
+        flex: 1;
+        max-width: 420px;
+        position: relative;
+    }
+
+    .header-search input {
+        width: 100%;
+        height: 38px;
+        padding: 0 16px 0 40px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 50px;
+        font-size: 13.5px;
+        font-family: inherit;
+        background: #f8fafc;
+        color: #1e293b;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .header-search input::placeholder { color: #94a3b8; }
+
+    .header-search input:focus {
+        border-color: #4f46e5;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+    }
+
+    .header-search i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 13px;
+    }
+
+    .header-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .notif-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-size: 15px;
+        position: relative;
+        transition: background 0.2s;
+    }
+
+    .notif-btn:hover { background: #e2e8f0; }
+
+    .notif-badge {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 8px;
+        height: 8px;
+        background: #f59e0b;
+        border-radius: 50%;
+        border: 2px solid #fff;
+    }
+
+    .user-pill {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 5px 12px 5px 5px;
+        border-radius: 50px;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        cursor: pointer;
+        transition: border-color 0.2s;
+    }
+
+    .user-pill:hover { border-color: #4f46e5; }
+
+    .user-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .user-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .user-pill i {
+        font-size: 10px;
+        color: #94a3b8;
+    }
+
+    /* ── BODY LAYOUT ── */
+    .app-body {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+        width: 220px;
+        background: #fff;
+        border-right: 1px solid #e8edf5;
+        padding: 20px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        overflow-y: auto;
+        flex-shrink: 0;
+        transition: width 0.3s ease;
+    }
+
+    .sidebar.collapsed {
+        width: 60px;
+        padding: 20px 8px;
+    }
+
+    .sidebar.collapsed .nav-label,
+    .sidebar.collapsed .section-title,
+    .sidebar.collapsed .nav-badge {
+        display: none;
+    }
+
+    .sidebar.collapsed .nav-item {
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .section-title {
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        padding: 0 8px;
+        margin-bottom: 4px;
+    }
+
+    .nav-group {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 10px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #64748b;
+        transition: all 0.18s ease;
+        cursor: pointer;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+    }
+
+    .nav-item i {
+        width: 18px;
+        text-align: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .nav-item:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+
+    .nav-item.active {
+        background: #ede9fe;
+        color: #4f46e5;
+        font-weight: 600;
+    }
+
+    .nav-item.active i { color: #4f46e5; }
+
+    .nav-badge {
+        margin-left: auto;
+        background: #4f46e5;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 50px;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .nav-badge.amber { background: #f59e0b; }
+
+    .nav-item.logout {
+        color: #ef4444;
+        margin-top: auto;
+    }
+
+    .nav-item.logout:hover { background: #fef2f2; }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+</style>
+
+<!-- TOP HEADER -->
+<div class="top-header">
+    <a href="/items-page" class="brand">
+        <div class="brand-icon">R</div>
+        <span class="brand-name">REFYND</span>
+    </a>
+
+    <div class="header-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search items, locations...">
+    </div>
+
+    <div class="header-right">
+        <button class="notif-btn">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge"></span>
+        </button>
+        <div class="user-pill" id="userPill">
+            <div class="user-avatar" id="userAvatar">?</div>
+            <span class="user-name" id="userName">User</span>
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+    </div>
+</div>
+
+<!-- APP BODY: sidebar + page content slot -->
+<div class="app-body">
+
+    <div class="sidebar" id="sidebar">
+
+        <div class="nav-group">
+            <div class="section-title">Main</div>
+            <a href="/items-page" class="nav-item" data-path="/items-page">
+                <i class="fa-solid fa-house"></i>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="/report-lost" class="nav-item" data-path="/report-lost">
+                <i class="fa-solid fa-thumbtack"></i>
+                <span class="nav-label">Report Lost</span>
+            </a>
+            <a href="/report-found" class="nav-item" data-path="/report-found">
+                <i class="fa-solid fa-box-open"></i>
+                <span class="nav-label">Report Found</span>
+            </a>
+        </div>
+
+        <div class="nav-group">
+            <div class="section-title">Discover</div>
+            <a href="/smart-matches" class="nav-item" data-path="/smart-matches">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span class="nav-label">Smart Matches</span>
+                <span class="nav-badge">4</span>
+            </a>
+            <a href="/messages" class="nav-item" data-path="/messages">
+                <i class="fa-regular fa-comment-dots"></i>
+                <span class="nav-label">Messages</span>
+                <span class="nav-badge amber">2</span>
+            </a>
+            <a href="/my-claims" class="nav-item" data-path="/my-claims">
+                <i class="fa-solid fa-tag"></i>
+                <span class="nav-label">Claims</span>
+            </a>
+        </div>
+
+        <div class="nav-group">
+            <div class="section-title">Manage</div>
+            <a href="/my-items" class="nav-item" data-path="/my-items">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span class="nav-label">History</span>
+            </a>
+            <a href="/analytics" class="nav-item" data-path="/analytics">
+                <i class="fa-solid fa-chart-bar"></i>
+                <span class="nav-label">Analytics</span>
+            </a>
+            <a href="/settings" class="nav-item" data-path="/settings">
+                <i class="fa-solid fa-gear"></i>
+                <span class="nav-label">Settings</span>
+            </a>
+        </div>
+
+        <div class="nav-group" style="margin-top: auto;">
+            <a href="/logout" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span class="nav-label">Logout</span>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Page content goes here in each .ejs file -->
+
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items List</title>
+    <style>
+        /* Nav partial handles: body display:flex, sidebar, title-bar */
+        /* This file only styles the content inside .content-box */
+
+        .dashboard-layout {
+            display: flex;
+            gap: 20px;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .left-column {
+            flex: 3;
+            min-height: 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-column {
+            flex: 1;
+            border-radius: 20px;
+            background: white;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 16px 40px rgba(30, 41, 59, 0.04);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-column ::-webkit-scrollbar {
+            display: none;
+        }
+
+        .content-inner {
+
+            padding: 24px;
+            height: 100%;
+            overflow-y: visible;
+            scrollbar-width: none;
+            -ms-overflow-style: none
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .topbar h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .topbar-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .link-btn {
+            padding: 9px 18px;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            display: inline-block;
+            border: none;
+        }
+
+        .link-btn-primary {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.35);
+        }
+
+        .link-btn-primary:hover { opacity: 0.92; }
+
+        .link-btn-outline {
+            background: #fff;
+            color: #5a67d8;
+            border: 1.5px solid #5a67d8;
+        }
+
+        .link-btn-outline:hover { background: #f0f2ff; }
+        .link-btn:active { transform: scale(0.98); }
+
+        /* SEARCH */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1.5px solid #dde0eb;
+            border-radius: 10px;
+            background: #fff;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-bar input:focus {
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.12);
+        }
+
+        .search-bar button {
+            padding: 10px 22px;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 600;
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+            transition: opacity 0.2s, transform 0.15s;
+        }
+
+        .search-bar button:hover { opacity: 0.92; }
+        .search-bar button:active { transform: scale(0.98); }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e8eaf0;
+            margin-bottom: 20px;
+        }
+
+        /* ITEMS GRID */
+        #itemsContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        #itemsContainer p {
+            font-size: 15px;
+            color: #6b7280;
+            grid-column: 1 / -1;
+        }
+
+        /* ITEM CARD */
+        .item-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .item-card:hover {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        .item-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        .item-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .item-card p {
+            font-size: 14px;
+            color: #374151;
+            line-height: 1.6;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .item-card p:last-of-type { border-bottom: none; }
+        .item-card p strong { color: #4a4a6a; font-weight: 600; margin-right: 4px; }
+
+        .item-card .view-btn {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 9px 18px;
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            box-shadow: 0 4px 12px rgba(90,103,216,0.3);
+            transition: opacity 0.2s, transform 0.15s;
+            align-self: flex-start;
+        }
+
+        .item-card .view-btn:hover { opacity: 0.92; }
+        .item-card .view-btn:active { transform: scale(0.98); }
+
+        .error {
+            color: #991b1b;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .content-box {
+            flex: 1;
+            border-radius: 20px;
+            background: white;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            min-height: 0;
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 16px 40px rgba(30, 41, 59, 0.04);
+        }
+
+        .content-inner {
+            padding: 24px;
+            height: 100%;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+.hero-box {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    border-radius: 16px;
+    padding: 28px 40px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 300px;
+    min-height: 0;
+    height: 150px;
+    flex-shrink: 0;        /* ← prevents it from shrinking */
+    box-sizing: border-box;
+}
+.hero-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hero-greeting {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+}
+
+.hero-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.hero-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    margin: 0;
+}
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;          /* ← change from hidden to auto */
+    scrollbar-width: none;     /* ← hide scrollbar Firefox */
+    -ms-overflow-style: none;  /* ← hide scrollbar IE */
+}
+
+.page-wrapper::-webkit-scrollbar {
+    display: none;             /* ← hide scrollbar Chrome/Safari */
+}
+
+
+.dashboard-layout {
+    flex: 1;                  /* ← takes remaining height */
+    min-height: 0;
+    overflow: visible;
+}
+    </style>
+</head>
+
+<%- include('partials/navTitle') %>
+
+<div class="page-wrapper">
+<!-- HERO -->
+<div class="hero-box">
+    <div class="hero-text">
+        <p class="hero-greeting" id="heroGreeting">Good morning 👋</p>
+        <h2 class="hero-title">Welcome back, <span id="heroName">there</span>!</h2>
+        <p class="hero-sub">Find and recover your lost items across campus.</p>
+    </div>
+</div>
+
+
+<div class="dashboard-layout">
+    <div class="left-column">
+        <div class="content-box">
+            <div class="content-inner">
+
+                <!-- TOPBAR -->
+                <div class="topbar">
+                    <h1>All Items</h1>
+                    <div class="topbar-links">
+                        <a href="/report-lost" class="link-btn link-btn-primary">Report Lost Item</a>
+                        <a href="/report-found" class="link-btn link-btn-primary">Report Found Item</a>
+                        <a href="/my-claims" class="link-btn link-btn-outline">My Claims</a>
+                        <a href="/my-items" class="link-btn link-btn-outline">My Items</a>
+                    </div>
+                </div>
+
+                <!-- SEARCH -->
+                <form id="searchForm" class="search-bar">
+                    <input type="text" id="searchInput" name="keyword" placeholder="Search items...">
+                    <button type="submit">Search</button>
+                </form>
+
+                <hr>
+
+                <div id="itemsContainer">Loading items...</div>
+
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Right side column for extra features -->
+    <div class="right-column">
+        <h3 style="font-size: 18px; margin-bottom: 12px; color: #1a1a2e;">Extra Features</h3>
+        <p style="font-size: 14px; color: #6b7280; line-height: 1.5;">You can add more features here on the right side.</p>
+    </div>
+</div> <!-- End dashboard-layout -->
+</div>
+</div> <!-- End main-section opened by navTitle -->
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.querySelector(".sidebar");
+        if(sidebar) sidebar.classList.toggle("hide");
+    }
+</script>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const keyword = document.getElementById('searchInput').value;
+            fetchItems(keyword);
+        });
+
+        async function fetchItems(keyword = '') {
+            try {
+                const url = keyword ? '/search?keyword=' + encodeURIComponent(keyword) : '/items';
+                const response = await fetch(url);
+                const result = await response.json();
+                const container = document.getElementById('itemsContainer');
+
+                if (response.ok && result.items) {
+                    if (result.items.length === 0) {
+                        container.innerHTML = '<p>No items found.</p>';
+                        return;
+                    }
+                    container.innerHTML = result.items.map(item => `
+                        <div class="item-card">
+                            ${item.image_url ? `<img src="/uploads/${item.image_url}" alt="${item.item_name}">` : ''}
+                            <h3>${item.item_name}</h3>
+                            <p><strong>Type:</strong> ${item.item_type}</p>
+                            <p><strong>Category:</strong> ${item.category}</p>
+                            <p><strong>Description:</strong> ${item.description}</p>
+                            <a href="/item-page/${item.item_id}" class="view-btn">View Details</a>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `<p class="error">${result.message || 'Failed to load items.'}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('itemsContainer').innerHTML =
+                    `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+
+        fetchItems();
+
+        // Highlight active nav item
+    const path = window.location.pathname;
+    document.querySelectorAll('.nav-item[data-path]').forEach(el => {
+        if (el.dataset.path === path) el.classList.add('active');
+    });
+
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+if (user.full_name) {
+    document.getElementById('userName').textContent = user.full_name;
+    document.getElementById('userAvatar').textContent =
+        user.full_name.split(' ').map(n => n[0]).join('').toUpperCase();
+    document.getElementById('heroName').textContent = user.full_name.split(' ')[0];
+}
+
+// Dynamic greeting based on time
+const hour = new Date().getHours();
+const greeting = hour < 12 ? 'Good morning 👋' : hour < 18 ? 'Good afternoon 👋' : 'Good evening 👋';
+document.getElementById('heroGreeting').textContent = greeting;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Messages | REFYND</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-color: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border-color: #E5E7EB;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: var(--text-main);
+        }
+        .header p {
+            color: var(--text-muted);
+            margin: 0;
+        }
+        #conversationList {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .conversation-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .conversation-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            border-color: var(--primary);
+        }
+        .conversation-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .item-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+        .last-message {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .view-chat-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+            margin-left: 16px;
+        }
+        .view-chat-btn:hover {
+            background-color: var(--primary-hover);
+        }
+        .loading, .no-messages {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/navTitle') %>
+
+    <div class="container">
+        <div class="header">
+            <h1>My Messages</h1>
+            <p>View your active conversations regarding reported items.</p>
+        </div>
+        <div id="conversationList">
+            <div class="loading">Loading conversations...</div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        async function loadConversations() {
+            try {
+                const res = await fetch('/my-messages', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await res.json();
+                const list = document.getElementById('conversationList');
+
+                if (!data.conversations || data.conversations.length === 0) {
+                    list.innerHTML = '<div class="no-messages">You have no conversations yet.</div>';
+                    return;
+                }
+
+                list.innerHTML = data.conversations.map(c => `
+                    <a href="/chat/${c.item_id}" class="conversation-card">
+                        <div class="conversation-info">
+                            <span class="item-name">Item: ${c.item_name}</span>
+                            <span class="last-message">Last message: ${c.last_message || 'No messages yet'}</span>
+                        </div>
+                        <span class="view-chat-btn">View Chat</span>
+                    </a>
+                `).join('');
+            } catch (err) {
+                document.getElementById('conversationList').innerHTML = '<div class="no-messages">Error loading conversations.</div>';
+            }
+        }
+
+        loadConversations();
+    </script>
+</body>
+</html>

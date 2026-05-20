@@ -83,3 +83,157 @@ exports.searchItem = (req,res)=> {
             res.json({ items: result })
         })
 }
+
+exports.getMyItems = (
+    req,
+    res
+) => {
+
+    const user_id =
+    req.user.id;
+
+    itemModel.getItemsByUser(
+
+        user_id,
+
+        (err, result) => {
+
+            if (err) {
+
+                return res
+                .status(500)
+                .json({
+
+                    message:
+                    'Database Error'
+                });
+            }
+
+            res.json(result);
+        }
+    );
+};
+
+exports.showEditPage = (req,res)=> {
+    const item_id = req.params.id;
+    itemModel.getItemById(
+        item_id,
+        (err,result)=> {
+            if(err) {
+                return res.status(500).json({
+                    message : "Database Error"
+                })
+            }
+        if(
+            result.length === 0
+        ) {
+            return res.status(404).json({
+                message : "Item not found"
+            })
+        }
+
+        const item = result[0];
+
+        //security check 
+        if(item.user_id !== req.user.id) {
+            return res.status(403).json({
+                message : "unauthorized"
+        }
+         )
+            }
+
+        res.render('edit-item', {item : item})
+        }
+    )
+}
+
+exports.updateItem = (req,res)=> {
+    const item_id = req.params.id;
+    const {
+        item_name,
+        category,
+        description
+    } = req.body;
+    let image_url = null;
+    if (req.file) {
+        image_url = req.file.filename;
+    }
+
+    itemModel.getItemById(
+        item_id,
+        (err,result) => {
+            if(result.length === 0) {
+                return res.status(404).json({
+                    message : "Item not found"
+                })
+            }
+
+        const item = result[0];
+
+        //security check
+        if(item.user_id !== req.user.id) {
+            return res.status(403).json({
+                message : "Unauthorized"
+            })
+        }
+
+        const updateData = {
+            item_name,
+            category,
+            description,
+            image_url
+        }
+
+        itemModel.updateItem(
+            item_id,
+            updateData,
+            (err,result)=> {
+                if(err) {
+                    return res.status(500).json({
+                        message : "Database Error"
+                    })
+                }
+                res.json({
+                    message : "Item updated successfully",
+                    item : result
+                })
+            }
+        )   
+        }
+    )  
+}
+
+exports.deleteItem = (req,res)=> {
+    const item_id = req.params.id;
+    itemModel.getItemById(
+        item_id,
+        (err,result)=> {
+            if(result.length === 0) {
+                return res.status(404).json({
+                    message : "Item not found"
+                })
+            }
+            const item = result[0];
+
+            //security check
+            if(item.user_id !== req.user.id) {
+                return res.status(403).json({
+                    message : "Unauthorized"
+                })
+            }
+            itemModel.deleteItem(
+                item_id,
+                (err,result)=> {
+                    if(err) {
+                        return res.status(500).json({
+                            message : "Database Error"
+                        })
+                    }
+                    res.json({
+                        message : "Item deleted successfully"
+                    })
+                }
+            )
+        }
+    )
+}

@@ -31,9 +31,15 @@ const getUserByEmail = (email,callback)=> {
     );
 };
 
+const getUserById = (user_id, callback) => {
+    const sql = `SELECT * FROM Users WHERE user_id = ?`;
+    db.query(sql, [user_id], callback);
+}
+
 module.exports = {
     createUser,
-    getUserByEmail
+    getUserByEmail,
+    getUserById
 }
 
 
