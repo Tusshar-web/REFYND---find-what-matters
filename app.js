@@ -31,11 +31,9 @@ const matchRouter = require('./routes/matchRouter');
 app.use('/match', matchRouter);
 const messageRouter = require('./routes/messageRoutes');
 app.use('/', messageRouter);
+const adminRoutes = require('./routes/adminRoutes');
+app.use('/', adminRoutes);
 
-app.get('/chat/:itemId',(req, res) => {
-      res.render('messages',{itemId: req.params.itemId});
-   }
-);
 
 //image
 app.use('/uploads', express.static('uploads'))

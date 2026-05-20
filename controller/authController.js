@@ -91,14 +91,15 @@ const loginUser = (req,res) =>  {
                 }
             );
 
-            res.json({
+             res.json({
              message :
              "Login Successful",
              token : token,
              user : {
                 id : user.user_id,
                 full_name : user.full_name,
-                role : user.role
+                role : user.role,
+                profile_image : user.profile_image
                 }
                }
             );

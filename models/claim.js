@@ -60,5 +60,9 @@ const getItemsByUser = (
     );
 };
 
-module.exports = { createClaim, getAllClaims, getClaimsByUser };
+const updateClaimStatus = (claim_id, status, callback) => {
+    const sql = `UPDATE Claims SET claim_status = ? WHERE claim_id = ?`;
+    db.query(sql, [status, claim_id], callback);
+}
 
+module.exports = { createClaim, getAllClaims, getClaimsByUser, updateClaimStatus };

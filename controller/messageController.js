@@ -1,77 +1,59 @@
 const messageModel = require('../models/message');
 
-const sendMessage = (req,res) => {
-    const user_id = req.user.id;
-    const item_id = req.param.itemId;
-    const {
-        message_text
-    } = req.body;
+const getConversations = (req, res) => {
+    const role = req.user.role;
+    const userId = req.user.id;
 
-    const messageData = {
-        user_id,
-        item_id,
-        message_text,
-        sender_role : req.user.role
+    if (role === 'admin') {
+        messageModel.getAdminConversations((err, results) => {
+            if (err) return res.status(500).json({ message: err.message });
+            res.json({ conversations: results });
+        });
+    } else {
+        messageModel.getConversationsByUser(userId, (err, results) => {
+            if (err) return res.status(500).json({ message: err.message });
+            res.json({ conversations: results });
+        });
+    }
+};
+
+const getMessages = (req, res) => {
+    const itemId = req.params.itemId;
+    
+    messageModel.getMessagesByItem(itemId, (err, results) => {
+        if (err) return res.status(500).json({ message: err.message });
+        res.json({ messages: results });
+    });
+};
+
+const sendMessage = (req, res) => {
+    const itemId = req.params.itemId;
+    const { message_text } = req.body;
+    
+    if (!message_text || message_text.trim() === '') {
+        return res.status(400).json({ message: 'Message text is required' });
     }
 
-    messageModel.createMessage(
-        messageData,
-        (err,result)=> {
-            if(err) {
-                return res.status(500).json({
-                    message : "Database Error"
-                })
-            }
-            res.json({
-                message : "Message sent successfully",
-                message : result
-            })
-        }
-    )
-}
+    const messageData = {
+        user_id: req.user.id,
+        item_id: itemId,
+        message_text: message_text,
+        sender_role: req.user.role
+    };
 
-const getMessages = (req,res) => {
-    const item_id = req.params.itemId;
-
-    messageModel.getMessgaesByItem(
-        item_id,
-        (err,result)=> {
-            if(err) {
-                return res.status(500).json({
-                    message : "Database Error"
-                })
-            }
-            res.json({
-                messages : result
-            })
-        }
-    )
-}
+    messageModel.createMessage(messageData, (err, result) => {
+        if (err) return res.status(500).json({ message: err.message });
+        res.json({ message: 'Message sent successfully' });
+    });
+};
 
 const showMessagesPage = (req, res) => {
     res.render('messagesPage');
 }
 
-const getMyConversations = (req, res) => {
-    const userId = req.user.id;
-    const query = `
-        SELECT DISTINCT m.item_id, i.item_name,
-            (SELECT message_text FROM messages 
-             WHERE item_id = m.item_id 
-             ORDER BY created_at DESC LIMIT 1) as last_message
-        FROM messages m
-        JOIN items i ON m.item_id = i.item_id
-        WHERE m.sender_id = ?
-    `;
-    db.query(query, [userId], (err, results) => {
-        if (err) return res.status(500).json({ message: err.message });
-        res.json({ conversations: results });
-    });
-};
-
 module.exports = {
-    sendMessage,
+    getConversations,
     getMessages,
-    showMessagesPage,
-    getMyConversations
+    sendMessage,
+    showMessagesPage
 }

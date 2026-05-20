@@ -78,6 +78,11 @@ const deleteItem = (item_id, callback) => {
     db.query(sql, [item_id], callback);
 }
 
+const updateItemStatus = (item_id, status, callback) => {
+    const sql = `UPDATE Items SET status = ? WHERE item_id = ?`;
+    db.query(sql, [status, item_id], callback);
+}
+
 module.exports = {
     addItem,
     getAllItems,
@@ -85,5 +90,6 @@ module.exports = {
     searchItem,
     getItemsByUser,
     updateItem,
-    deleteItem
+    deleteItem,
+    updateItemStatus
 }

@@ -13,11 +13,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f0f2f5;
-            min-height: 100vh;
-            padding: 40px 16px;
-            color: #1a1a2e;
+            /* Styles inherited from navTitle.ejs */
         }
 
         .container {
@@ -172,9 +168,12 @@
 </head>
 
 <body>
-    <div class="container">
-        <a href="/items-page" class="back-link">← Back to Items</a>
-        <h1>AI Match Results</h1>
+    <%- include('partials/navTitle') %>
+    
+    <div class="main-content" style="flex: 1; padding: 40px 16px; background: #f4f6fb; overflow-y: auto;">
+        <div class="container">
+            <a href="/smart-matches" class="back-link">← Back to Smart Matches</a>
+            <h1>AI Match Results</h1>
         <p class="subtitle">These found items most closely match your lost item, ranked by AI similarity.</p>
         <div id="results">
             <div class="loading">
@@ -183,6 +182,7 @@
             </div>
         </div>
     </div>
+</div>
 
     <script>
         const itemId = "<%= itemId %>";

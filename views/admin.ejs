@@ -1,138 +1,692 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard | REFYND</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f0f2f5;
-            min-height: 100vh;
+        .page-header {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1a1a2e;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 24px;
         }
 
-        .container {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
-            padding: 48px 40px;
-            width: 100%;
-            max-width: 480px;
-            text-align: center;
-        }
-
-        .avatar {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #5a67d8, #6b46c1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: 700;
-            color: #fff;
-            margin: 0 auto 24px;
-        }
-
-        h1 {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #5a67d8;
-            margin-bottom: 8px;
-        }
-
-        h2 {
+        .page-title {
             font-size: 26px;
             font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 12px;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+            margin: 0 0 8px 0;
         }
 
-        p {
+        .page-subtitle {
             font-size: 15px;
-            color: #6b7280;
-            line-height: 1.6;
-            margin-bottom: 32px;
+            color: #64748b;
+            margin: 0;
         }
 
-        .actions {
+        /* TABS */
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn:hover {
+            color: #1e293b;
+        }
+
+        .tab-btn.active {
+            color: #10b981;
+            border-bottom-color: #10b981;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #e8edf5;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .icon-users { background: #eff6ff; color: #3b82f6; }
+        .icon-items { background: #fdf4ff; color: #d946ef; }
+        .icon-claims { background: #f0fdf4; color: #22c55e; }
+        .icon-messages { background: #fffbeb; color: #f59e0b; }
+
+        .stat-info { display: flex; flex-direction: column; }
+        .stat-label { font-size: 14px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
+        .stat-value { font-size: 28px; font-weight: 700; color: #0f172a; line-height: 1; }
+
+        /* DATA TABLES */
+        .admin-table-container {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow-x: auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .admin-table th {
+            background: #f8fafc;
+            padding: 14px 20px;
+            font-size: 12.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #475569;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .admin-table td {
+            padding: 16px 20px;
+            font-size: 14px;
+            color: #1e293b;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        .admin-table tr:last-child td { border-bottom: none; }
+        .admin-table tr:hover { background: #f8fafc; }
+
+        .type-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .type-lost { background: #fef2f2; color: #ef4444; }
+        .type-found { background: #eff6ff; color: #3b82f6; }
+
+        .status-select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e293b;
+            background: #fff;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .status-select:focus { border-color: #10b981; }
+
+        .empty-state {
+            padding: 40px;
+            text-align: center;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        /* CHAT UI */
+        .chat-container {
+            display: flex;
+            height: 600px;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .chat-sidebar {
+            width: 320px;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+        }
+
+        .chat-sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-list-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .chat-list-item:hover { background: #f1f5f9; }
+        .chat-list-item.active { background: #e0e7ff; border-left: 4px solid #4f46e5; padding-left: 16px; }
+
+        .chat-item-title { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+        .chat-item-user { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+        .chat-item-preview { font-size: 13px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: #fdfdfd;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message-student {
+            align-self: flex-start;
+            background: #f1f5f9;
+            color: #1e293b;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-admin {
+            align-self: flex-end;
+            background: #4f46e5;
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-sender { font-size: 11px; font-weight: 700; margin-bottom: 4px; opacity: 0.8; }
+
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
             display: flex;
             gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
+            background: #ffffff;
         }
 
-        .btn {
-            padding: 11px 24px;
-            font-size: 15px;
-            font-family: inherit;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-            display: inline-block;
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 50px;
+            font-size: 14px;
+            outline: none;
         }
+        .chat-input-area input:focus { border-color: #4f46e5; }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-            color: #fff;
+        .chat-input-area button {
+            padding: 0 24px;
+            background: #4f46e5;
+            color: white;
             border: none;
-            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.35);
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
+        .chat-input-area button:hover { opacity: 0.9; }
 
-        .btn-primary:hover {
-            opacity: 0.92;
-            box-shadow: 0 6px 18px rgba(90, 103, 216, 0.45);
-        }
-
-        .btn-secondary {
-            background: #fff;
-            color: #5a67d8;
-            border: 1.5px solid #5a67d8;
-            box-shadow: none;
-        }
-
-        .btn-secondary:hover {
-            background: #f0f2ff;
-            box-shadow: 0 2px 8px rgba(90, 103, 216, 0.15);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="avatar">A</div>
-        <h1>Welcome Admin</h1>
-        <h2>
-            <%= user.full_name %>
-        </h2>
-        <p>You can manage items and claims.</p>
-        <div class="actions">
-            <a href="/items" class="btn btn-primary">Manage Items</a>
-            <a href="/claims" class="btn btn-secondary">Manage Claims</a>
+    <%- include('partials/adminNavTitle') %>
+    
+    <div class="main-content" style="flex: 1; padding: 40px; background: #f4f6fb; overflow-y: auto;">
+        
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Admin Management</h1>
+                <p class="page-subtitle">Manage platform activity, reported items, and active claims.</p>
+            </div>
         </div>
-    </div>
-</body>
 
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+            <button class="tab-btn" onclick="switchTab('items')">Items Database</button>
+            <button class="tab-btn" onclick="switchTab('claims')">Claims</button>
+            <button class="tab-btn" onclick="switchTab('messages')">Messages</button>
+        </div>
+
+        <!-- OVERVIEW TAB -->
+        <div id="overview" class="tab-content active">
+            <div class="stats-grid" id="statsGrid">
+                <!-- Injected via JS -->
+                <div class="empty-state">Loading statistics...</div>
+            </div>
+        </div>
+
+        <!-- ITEMS TAB -->
+        <div id="items" class="tab-content">
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Reporter</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsTableBody">
+                        <tr><td colspan="6" class="empty-state">Loading items...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CLAIMS TAB -->
+        <div id="claims" class="tab-content">
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Item Name</th>
+                            <th>Claimant</th>
+                            <th>Proof Details</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="claimsTableBody">
+                        <tr><td colspan="5" class="empty-state">Loading claims...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- MESSAGES TAB -->
+        <div id="messages" class="tab-content">
+            <div class="chat-container">
+                <div class="chat-sidebar">
+                    <div class="chat-sidebar-header">Active Conversations</div>
+                    <div class="chat-list" id="adminChatList">
+                        <div class="empty-state" style="margin-top: 50px;">Loading conversations...</div>
+                    </div>
+                </div>
+                <div class="chat-main">
+                    <div class="chat-header" id="adminChatHeader">
+                        <span style="color:#94a3b8; font-weight:500;">Select a conversation to start chatting</span>
+                    </div>
+                    <div class="chat-messages" id="adminChatMessages">
+                        <!-- Messages load here -->
+                    </div>
+                    <div class="chat-input-area" id="adminChatInputArea" style="display: none;">
+                        <input type="text" id="adminMessageInput" placeholder="Type your reply here..." onkeypress="handleAdminChatKeyPress(event)">
+                        <button onclick="sendAdminMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login';
+
+        let currentActiveItemId = null;
+        let adminPollingInterval = null;
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-btn[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            
+            if (adminPollingInterval) {
+                clearInterval(adminPollingInterval);
+                adminPollingInterval = null;
+            }
+
+            if (tabId === 'overview') fetchStats();
+            if (tabId === 'items') fetchItems();
+            if (tabId === 'claims') fetchClaims();
+            if (tabId === 'messages') {
+                fetchAdminConversations();
+                adminPollingInterval = setInterval(() => {
+                    fetchAdminConversations(false); // pass false to skip UI resetting if needed
+                    if (currentActiveItemId) {
+                        const headerText = document.getElementById('adminChatHeader').innerText;
+                        const studentNameMatch = headerText.match(/with (.*)/);
+                        const studentName = studentNameMatch ? studentNameMatch[1] : 'Student';
+                        const itemName = headerText.split('\n')[0];
+                        loadAdminChat(currentActiveItemId, itemName, studentName, false);
+                    }
+                }, 3000);
+            }
+        }
+
+        // Fetch Admin Conversations
+        async function fetchAdminConversations(isInitial = true) {
+            try {
+                const res = await fetch('/my-messages', { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                const list = document.getElementById('adminChatList');
+                
+                if (!res.ok) throw new Error(data.message);
+                if (!data.conversations || data.conversations.length === 0) {
+                    list.innerHTML = '<div class="empty-state">No active conversations.</div>';
+                    return;
+                }
+
+                list.innerHTML = data.conversations.map(c => `
+                    <div class="chat-list-item ${currentActiveItemId == c.item_id ? 'active' : ''}" onclick="loadAdminChat(${c.item_id}, '${escapeHTML(c.item_name)}', '${escapeHTML(c.student_name)}')">
+                        <div class="chat-item-title">${escapeHTML(c.item_name)}</div>
+                        <div class="chat-item-user">with ${escapeHTML(c.student_name)}</div>
+                        <div class="chat-item-preview">${escapeHTML(c.last_message || 'No messages yet...')}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+                if (isInitial) {
+                    document.getElementById('adminChatList').innerHTML = `<div class="empty-state" style="color:#ef4444;">Failed to load conversations.</div>`;
+                }
+            }
+        }
+
+        async function loadAdminChat(itemId, itemName, studentName, forceScroll = true) {
+            currentActiveItemId = itemId;
+            document.getElementById('adminChatHeader').innerHTML = `
+                <div>
+                    <div style="font-size: 16px; font-weight: 700; color: #1e293b;">${itemName}</div>
+                    <div style="font-size: 12px; color: #64748b; font-weight: 400;">Chatting with ${studentName}</div>
+                </div>
+            `;
+            document.getElementById('adminChatInputArea').style.display = 'flex';
+            
+            // Refresh conversation list to highlight active item
+            if (forceScroll) {
+                fetchAdminConversations();
+            }
+
+            try {
+                const res = await fetch(`/messages/${itemId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                const chatBox = document.getElementById('adminChatMessages');
+                
+                if (!res.ok) throw new Error(data.message);
+
+                if (!data.messages || data.messages.length === 0) {
+                    chatBox.innerHTML = '<div class="empty-state">No messages in this conversation.</div>';
+                    return;
+                }
+
+                let isScrolledToBottom = false;
+                if (!forceScroll) {
+                    isScrolledToBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 5;
+                }
+
+                chatBox.innerHTML = data.messages.map(m => `
+                    <div class="message-bubble ${m.sender_role === 'admin' ? 'message-admin' : 'message-student'}">
+                        <div class="message-sender">${m.sender_role === 'admin' ? 'You (Admin)' : escapeHTML(m.sender_name)}</div>
+                        <div>${escapeHTML(m.message_text)}</div>
+                    </div>
+                `).join('');
+                
+                // scroll to bottom
+                if (forceScroll || isScrolledToBottom) {
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            } catch (err) {
+                if (forceScroll) {
+                    document.getElementById('adminChatMessages').innerHTML = `<div class="empty-state" style="color:#ef4444;">Failed to load chat history.</div>`;
+                }
+            }
+        }
+
+        async function sendAdminMessage() {
+            if (!currentActiveItemId) return;
+            const input = document.getElementById('adminMessageInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            try {
+                const res = await fetch(`/messages/${currentActiveItemId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ message_text: text })
+                });
+                if (!res.ok) throw new Error('Failed to send');
+                input.value = '';
+                // Reload chat
+                const headerText = document.getElementById('adminChatHeader').innerText;
+                const studentNameMatch = headerText.match(/with (.*)/);
+                const studentName = studentNameMatch ? studentNameMatch[1] : 'Student';
+                const itemName = headerText.split('\n')[0];
+                
+                loadAdminChat(currentActiveItemId, itemName, studentName);
+            } catch (err) {
+                alert('Failed to send message.');
+            }
+        }
+
+        function handleAdminChatKeyPress(e) {
+            if (e.key === 'Enter') sendAdminMessage();
+        }
+
+        // Fetch Stats
+        async function fetchStats() {
+            try {
+                const res = await fetch('/admin/stats', { headers: { 'Authorization': `Bearer ${token}` } });
+                const stats = await res.json();
+                
+                if (!res.ok) {
+                    throw new Error(stats.message || 'Failed to fetch stats');
+                }
+
+                document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-icon icon-users"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-info"><span class="stat-label">Total Users</span><span class="stat-value">${stats.totalUsers || 0}</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-items"><i class="fa-solid fa-box-open"></i></div>
+                        <div class="stat-info"><span class="stat-label">Total Items</span><span class="stat-value">${stats.totalItems || 0}</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-claims"><i class="fa-solid fa-tag"></i></div>
+                        <div class="stat-info"><span class="stat-label">Total Claims</span><span class="stat-value">${stats.totalClaims || 0}</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-messages"><i class="fa-solid fa-comments"></i></div>
+                        <div class="stat-info"><span class="stat-label">Total Messages</span><span class="stat-value">${stats.totalMessages || 0}</span></div>
+                    </div>
+                `;
+            } catch (err) {
+                console.error(err);
+                document.getElementById('statsGrid').innerHTML = `<div class="empty-state" style="color:#ef4444;">Access Denied: You must be logged in as an Admin to view stats. Please logout and login with an Admin account.</div>`;
+            }
+        }
+
+        // Fetch Items
+        async function fetchItems() {
+            try {
+                const res = await fetch('/admin/items', { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                const tbody = document.getElementById('itemsTableBody');
+                
+                if (!res.ok) {
+                    throw new Error(data.message || 'Failed to fetch items');
+                }
+
+                if (!data.items || data.items.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No items reported yet.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.items.map(i => `
+                    <tr>
+                        <td style="font-weight:600; color:#64748b;">#${i.item_id}</td>
+                        <td><span class="type-badge type-${i.item_type.toLowerCase()}">${i.item_type}</span></td>
+                        <td style="font-weight:600;">${escapeHTML(i.item_name)}</td>
+                        <td>${escapeHTML(i.reporter_name || 'Unknown')}</td>
+                        <td>${escapeHTML(i.category)}</td>
+                        <td>
+                            <select class="status-select" onchange="updateItemStatus(${i.item_id}, this.value)">
+                                <option value="open" ${i.status === 'open' ? 'selected' : ''}>Open</option>
+                                <option value="claimed" ${i.status === 'claimed' ? 'selected' : ''}>Claimed</option>
+                                <option value="closed" ${i.status === 'closed' ? 'selected' : ''}>Closed</option>
+                            </select>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+                document.getElementById('itemsTableBody').innerHTML = `<tr><td colspan="6" class="empty-state" style="color:#ef4444;">Access Denied: You must be an Admin.</td></tr>`;
+            }
+        }
+
+        async function updateItemStatus(id, status) {
+            try {
+                const res = await fetch(`/admin/items/${id}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ status })
+                });
+                if (!res.ok) throw new Error('Failed to update');
+                alert('Item status updated successfully!');
+            } catch (err) {
+                alert('Failed to update status. Access Denied.');
+            }
+        }
+
+        // Fetch Claims
+        async function fetchClaims() {
+            try {
+                const res = await fetch('/admin/claims', { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                const tbody = document.getElementById('claimsTableBody');
+                
+                if (!res.ok) {
+                    throw new Error(data.message || 'Failed to fetch claims');
+                }
+
+                if (!data.claims || data.claims.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No claims filed yet.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.claims.map(c => `
+                    <tr>
+                        <td style="font-weight:600; color:#64748b;">#${c.claim_id}</td>
+                        <td style="font-weight:600;">${escapeHTML(c.item_name || `Item #${c.item_id}`)}</td>
+                        <td>${escapeHTML(c.claimant_name || 'Unknown')}</td>
+                        <td><div style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHTML(c.proof_description)}</div></td>
+                        <td>
+                            <select class="status-select" onchange="updateClaimStatus(${c.claim_id}, this.value)" style="background: ${c.claim_status === 'pending' ? '#fffbeb' : c.claim_status === 'approved' ? '#f0fdf4' : '#fef2f2'}">
+                                <option value="pending" ${c.claim_status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="approved" ${c.claim_status === 'approved' ? 'selected' : ''}>Approved</option>
+                                <option value="rejected" ${c.claim_status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                            </select>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+                document.getElementById('claimsTableBody').innerHTML = `<tr><td colspan="5" class="empty-state" style="color:#ef4444;">Access Denied: You must be an Admin.</td></tr>`;
+            }
+        }
+
+        async function updateClaimStatus(id, status) {
+            try {
+                const res = await fetch(`/admin/claims/${id}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ status })
+                });
+                if (!res.ok) throw new Error('Failed to update');
+                alert('Claim status updated successfully!');
+                fetchClaims(); // Refresh colors
+            } catch (err) {
+                alert('Failed to update status. Access Denied.');
+            }
+        }
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.toString().replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // Initialize dashboard
+        fetchStats();
+    </script>
+</body>
 </html>

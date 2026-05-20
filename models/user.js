@@ -36,11 +36,22 @@ const getUserById = (user_id, callback) => {
     db.query(sql, [user_id], callback);
 }
 
+const updateUserProfile = (userId, data, callback) => {
+    const sql = `
+        UPDATE Users 
+        SET phone_number = ?, department = ?, student_id = ?, profile_image = COALESCE(?, profile_image)
+        WHERE user_id = ?
+    `;
+    db.query(
+        sql,
+        [data.phone_number, data.department, data.student_id, data.profile_image, userId],
+        callback
+    );
+}
+
 module.exports = {
     createUser,
     getUserByEmail,
-    getUserById
+    getUserById,
+    updateUserProfile
 }
-
-
-

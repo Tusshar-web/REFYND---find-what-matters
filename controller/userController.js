@@ -21,3 +21,28 @@ exports.getProfile = (req,res)=> {
         }
     )
 }
+
+exports.updateProfile = (req, res) => {
+    const user_id = req.user.id;
+    const { phone_number, department, student_id } = req.body;
+    let profile_image = null;
+
+    if (req.file) {
+        profile_image = req.file.filename;
+    }
+
+    const data = {
+        phone_number: phone_number || null,
+        department: department || null,
+        student_id: student_id || null,
+        profile_image: profile_image
+    };
+
+    userModel.updateUserProfile(user_id, data, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: "Failed to update profile" });
+        }
+        res.json({ message: "Profile updated successfully!" });
+    });
+}

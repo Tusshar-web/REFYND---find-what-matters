@@ -1,213 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f0f2f5;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 16px;
-            color: #1a1a2e;
-        }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f0f2f5;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 16px;
+        color: #1a1a2e;
+      }
 
-        .container {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
-            padding: 48px 40px;
-            width: 100%;
-            max-width: 420px;
-        }
+      .container {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow:
+          0 4px 24px rgba(0, 0, 0, 0.08),
+          0 1px 4px rgba(0, 0, 0, 0.04);
+        padding: 48px 40px;
+        width: 100%;
+        max-width: 420px;
+      }
 
-        h1 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 28px;
-            text-align: center;
-        }
+      h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 28px;
+        text-align: center;
+      }
 
-        .form-group {
-            margin-bottom: 18px;
-        }
+      .form-group {
+        margin-bottom: 18px;
+      }
 
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #4a4a6a;
-            text-transform: uppercase;
-            letter-spacing: 0.01em;
-            margin-bottom: 6px;
-        }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #4a4a6a;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+        margin-bottom: 6px;
+      }
 
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px 14px;
-            font-size: 15px;
-            font-family: inherit;
-            border: 1.5px solid #dde0eb;
-            border-radius: 10px;
-            background: #fafbff;
-            color: #1a1a2e;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-        }
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px 14px;
+        font-size: 15px;
+        font-family: inherit;
+        border: 1.5px solid #dde0eb;
+        border-radius: 10px;
+        background: #fafbff;
+        color: #1a1a2e;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          background 0.2s;
+      }
 
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            border-color: #5a67d8;
-            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.12);
-            background: #fff;
-        }
+      input[type="email"]:focus,
+      input[type="password"]:focus {
+        border-color: #5a67d8;
+        box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.12);
+        background: #fff;
+      }
 
-        .btn {
-            width: 100%;
-            padding: 12px;
-            font-size: 15px;
-            font-family: inherit;
-            font-weight: 600;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-        }
+      .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+        font-family: inherit;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition:
+          opacity 0.2s,
+          transform 0.15s,
+          box-shadow 0.2s;
+      }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.35);
-            margin-bottom: 12px;
-        }
+      .btn-primary {
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(90, 103, 216, 0.35);
+        margin-bottom: 12px;
+      }
 
-        .btn-primary:hover {
-            opacity: 0.92;
-            box-shadow: 0 6px 18px rgba(90, 103, 216, 0.45);
-        }
+      .btn-primary:hover {
+        opacity: 0.92;
+        box-shadow: 0 6px 18px rgba(90, 103, 216, 0.45);
+      }
 
-        .btn-outline {
-            background: #fff;
-            color: #5a67d8;
-            border: 1.5px solid #5a67d8;
-            box-shadow: none;
-        }
+      .btn-outline {
+        background: #fff;
+        color: #5a67d8;
+        border: 1.5px solid #5a67d8;
+        box-shadow: none;
+      }
 
-        .btn-outline:hover {
-            background: #f0f2ff;
-        }
+      .btn-outline:hover {
+        background: #f0f2ff;
+      }
 
-        .btn:active {
-            transform: scale(0.98);
-        }
+      .btn:active {
+        transform: scale(0.98);
+      }
 
-        .divider {
-            border: none;
-            border-top: 1px solid #e8eaf0;
-            margin: 20px 0;
-        }
+      .divider {
+        border: none;
+        border-top: 1px solid #e8eaf0;
+        margin: 20px 0;
+      }
 
-        #message {
-            margin-top: 18px;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            min-height: 20px;
-        }
+      #message {
+        margin-top: 18px;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+        min-height: 20px;
+      }
 
-        #message.success {
-            color: #1a7a4a;
-        }
+      #message.success {
+        color: #1a7a4a;
+      }
 
-        #message.error {
-            color: #991b1b;
-        }
+      #message.error {
+        color: #991b1b;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <h1>Login</h1>
+      <h1>Login</h1>
 
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter Email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter Password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter Email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter Password"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
 
-        <hr class="divider">
+      <hr class="divider" />
 
-        <p style="text-align: center; font-size: 14px; font-weight: 500; color: #4a4a6a; margin-top: 10px;">
-            Don't have an account? <a href="/" style="color: #5a67d8; text-decoration: none; font-weight: 600;">Sign up</a>
-        </p>
+      <p
+        style="
+          text-align: center;
+          font-size: 14px;
+          font-weight: 500;
+          color: #4a4a6a;
+          margin-top: 10px;
+        "
+      >
+        Don't have an account?
+        <a
+          href="/"
+          style="color: #5a67d8; text-decoration: none; font-weight: 600"
+          >Sign up</a
+        >
+      </p>
 
-        <div id="message"></div>
+      <div id="message"></div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const messageEl = document.getElementById('message');
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const messageEl = document.getElementById("message");
 
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
+          try {
+            const response = await fetch("/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            });
 
-                const contentType = response.headers.get("content-type");
-                if (contentType && contentType.indexOf("application/json") !== -1) {
-                    const result = await response.json();
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+              const result = await response.json();
 
-                    if (response.ok && result.token) {
-                        localStorage.setItem('token', result.token);
-                        localStorage.setItem('user', JSON.stringify(result.user));
-                        messageEl.innerText = 'Login successful! Redirecting...';
-                        messageEl.className = 'success';
-                        
-                        setTimeout(() => {
-                            window.location.href = '/items-page';
-                        }, 1000);
-                    } else {
-                        messageEl.innerText = result.message || 'Login failed.';
-                        messageEl.className = 'error';
-                    }
-                } else {
-                    const textResult = await response.text();
-                    messageEl.innerText = textResult || 'Login failed.';
-                    messageEl.className = 'error';
-                }
-            } catch (error) {
-                messageEl.innerText = 'Error: ' + error.message;
-                messageEl.className = 'error';
+              if (response.ok && result.token) {
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("user", JSON.stringify(result.user));
+                messageEl.innerText = "Login successful! Redirecting...";
+                messageEl.className = "success";
+
+                setTimeout(() => {
+                  const role = result.user.role;
+                  if (role === "admin") {
+                    window.location.href = "/admin";
+                  } else {
+                    window.location.href = "/items-page";
+                  }
+                }, 1000);
+              } else {
+                messageEl.innerText = result.message || "Login failed.";
+                messageEl.className = "error";
+              }
+            } else {
+              const textResult = await response.text();
+              messageEl.innerText = textResult || "Login failed.";
+              messageEl.className = "error";
             }
+          } catch (error) {
+            messageEl.innerText = "Error: " + error.message;
+            messageEl.className = "error";
+          }
         });
     </script>
-</body>
-
+  </body>
 </html>

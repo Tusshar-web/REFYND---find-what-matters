@@ -170,6 +170,9 @@
                                     ${claim.claim_status.charAt(0).toUpperCase() + claim.claim_status.slice(1)}
                                 </span>
                             </p>
+                            <div style="margin-top: 16px;">
+                                <a href="/chat/${claim.item_id}" style="display:inline-block; padding:8px 16px; background:#4f46e5; color:white; text-decoration:none; border-radius:8px; font-size:13.5px; font-weight:600;"><i class="fa-regular fa-comment-dots"></i> Message Admin</a>
+                            </div>
                         </div>
                     `).join('');
                 } else {
